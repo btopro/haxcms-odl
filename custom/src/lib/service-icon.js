@@ -1,8 +1,12 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-class ServiceIcon extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+
+class ServiceIcon extends DDD {
+  static get styles() {
+    return [
+      ...super.styles,
+      css`
         :host {
           display: block;
         }
@@ -26,10 +30,10 @@ class ServiceIcon extends PolymerElement {
           width: 100px;
         }
 
-        iron-icon {
-          width: 100px;
-          height: 100px;
-          fill: #e2801e;
+        simple-icon-lite {
+          --simple-icon-height: 100px;
+          --simple-icon-width: 100px;
+          color: #e2801e;
         }
 
         #info-wrap {
@@ -53,16 +57,20 @@ class ServiceIcon extends PolymerElement {
           font-weight: 300;
           line-height: 1.4;
         }
-      </style>
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="container">
         <div id="icon-wrap">
           <div id="icon">
-            <iron-icon icon="[[icon]]"></iron-icon>
+            <simple-icon-lite icon="${this.icon}"></simple-icon-lite>
           </div>
         </div>
         <div id="info-wrap">
-          <div id="title">[[title]]</div>
-          <div id="info">[[info]]</div>
+          <div id="title">${this.title}</div>
+          <div id="info">${this.info}</div>
         </div>
       </div>
     `;
@@ -72,26 +80,27 @@ class ServiceIcon extends PolymerElement {
   }
   static get properties() {
     return {
+      ...super.properties,
       /**
        * Icon source
        */
       icon: {
-        type: String
+        type: String,
       },
       /**
        * Title over icon
        */
       title: {
-        type: String
+        type: String,
       },
       /**
        * info text for icon
        */
       info: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
 }
-window.customElements.define(ServiceIcon.tag, ServiceIcon);
+globalThis.customElements.define(ServiceIcon.tag, ServiceIcon);
 export { ServiceIcon };

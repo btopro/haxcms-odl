@@ -1,5 +1,7 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-class TestimonialsFeed extends LitElement {
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+
+class TestimonialsFeed extends DDD {
   static get styles() {
     return [
       css`
@@ -13,20 +15,20 @@ class TestimonialsFeed extends LitElement {
         h2 {
           margin: 0;
           color: var(--theme-color-4);
-          font-size: 40px;
-          font-weight: normal;
+          font-size: var(--ddd-font-size-l, 40px);
+          font-weight: var(--ddd-font-weight-normal, normal);
         }
         #highlights_feed_wrap {
-          margin: 20px;
+          margin: var(--ddd-spacing-5, 20px);
         }
         .feed_header {
           background-color: var(--theme-color-2);
           display: flex;
           justify-content: center;
-          margin-bottom: 20px;
-          padding: 5px;
+          margin-bottom: var(--ddd-spacing-5, 20px);
+          padding: var(--ddd-spacing-2, 5px);
         }
-      `
+      `,
     ];
   }
   render() {
@@ -43,5 +45,5 @@ class TestimonialsFeed extends LitElement {
     return "testimonials-feed";
   }
 }
-window.customElements.define(TestimonialsFeed.tag, TestimonialsFeed);
+globalThis.customElements.define(TestimonialsFeed.tag, TestimonialsFeed);
 export { TestimonialsFeed };

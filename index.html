@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <link rel="preload" href="./build.js" as="script" crossorigin="anonymous">
-  <link rel="preload" href="./custom/build/custom.es6.js" as="script" crossorigin="anonymous">
-  <link rel="preload" href="./build/es6/node_modules/@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-builder.js"
-    as="script" crossorigin="anonymous">
-  <link rel="preload" href="./build/es6/dist/my-custom-elements.js" as="script" crossorigin="anonymous">
-  <link rel="preload" href="./build/es6/node_modules/@lrnwebcomponents/haxcms-elements/lib/base.css" as="style">
-  <link rel="preload" href="./theme/theme.css" as="style">
-  <link rel="preconnect" crossorigin href="https://fonts.googleapis.com">
-  <link rel="preconnect" crossorigin href="https://cdnjs.cloudflare.com">
-  <link rel="preconnect" crossorigin href="https://i.creativecommons.org">
-  <link rel="preconnect" crossorigin href="https://licensebuttons.net">
   <script>
     // attempt to correctly set the base without knowing where we're installed fully...
     if (document.location.pathname.indexOf('/_sites/') != -1) {
@@ -21,181 +9,247 @@
     else if (document.location.pathname.indexOf('/sites/') != -1) {
       document.write("<base href='" + document.location.pathname.substring(0, document.location.pathname.indexOf('/', document.location.pathname.indexOf('/sites/') + 7)) + "/' />");
     }
+    else if (globalThis.location.host.indexOf('github.io') != -1 && globalThis.location.pathname.split('/').length > 1) {
+      document.write("<base href='/" + document.location.pathname.split('/')[1] + "/' />");
+    }
     else {
       document.write("<base href='/' />");
     }
+    var mangedSEO = document.querySelectorAll('[data-managed-seo]');
+    for (var i = 0; i < mangedSEO.length; i++) {
+      var seoTag = mangedSEO[i];
+      seoTag.setAttribute('content', document.location.href);
+    }
   </script>
-  <!-- import config -->
-  <script src="./config.js"></script>
-  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1,user-scalable=yes">
+  <script>window.process = window.process || {env: {NODE_ENV: 'production'}};</script>
+  <script type="importmap">
+    {
+      "scopes": {
+        "./custom/build/": {
+          "@haxtheweb/": "./build/es6/node_modules/@haxtheweb/",
+          "lit": "./build/es6/node_modules/lit/index.js",
+          "lit/": "./build/es6/node_modules/lit/",
+          "mobx": "./build/es6/node_modules/mobx/dist/mobx.esm.js"
+        }
+      }
+    }
+  </script>
+  <meta charset="utf-8">
+  <link rel="preconnect" crossorigin href="https://fonts.googleapis.com">
+  <link rel="preconnect" crossorigin href="https://cdnjs.cloudflare.com">
+  <title>Office of Digital Learning - Eberly College of Science at Penn State</title>
+  <meta name="application-name" content="Office of Digital Learning" />
+  <meta name="apple-mobile-web-app-title" content="Office of Digital Learning" />
+  <meta name="og:sitename" property="og:sitename" content="Office of Digital Learning" />
+  <meta name="og:title" property="og:title" content="Office of Digital Learning" />
+  <meta name="twitter:title" property="twitter:title" content="Office of Digital Learning" />
+  <meta name="og:url" property="og:url" content="/" data-managed-seo />
+  <meta name="twitter:site" property="twitter:site" content="/" data-managed-seo />
+  <link rel="preload" href="./build.js" as="script" />
+  <link rel="preload" href="./build-haxcms.js" as="script" />
+  <link rel="preload" href="./wc-registry.json" as="fetch" crossorigin="anonymous" fetchpriority="high" />
+  <link rel="preload" href="./build/es6/node_modules/@haxtheweb/dynamic-import-registry/dynamic-import-registry.js" as="script" crossorigin="anonymous" />
+  <link rel="modulepreload" href="./build/es6/node_modules/@haxtheweb/dynamic-import-registry/dynamic-import-registry.js" />
+  <link rel="preload" href="./build/es6/node_modules/@haxtheweb/wc-autoload/wc-autoload.js" as="script" crossorigin="anonymous" />
+  <link rel="modulepreload" href="./build/es6/node_modules/@haxtheweb/wc-autoload/wc-autoload.js" />
+  <link rel="preload" href="./build/es6/node_modules/@haxtheweb/haxcms-elements/lib/core/themes/haxcms-basic-theme.js" as="script" crossorigin="anonymous" />
+  <link rel="modulepreload" href="./build/es6/node_modules/@haxtheweb/haxcms-elements/lib/core/themes/haxcms-basic-theme.js" />
+  <link rel="preload" href="./build/es6/node_modules/@haxtheweb/haxcms-elements/lib/base.css" as="style" />
   <meta name="generator" content="HAXcms">
-  <meta name="description" content="Office of Digital Learning">
-  <meta name="theme-color" content="#3f51b5">
+  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <link rel="icon" href="assets/favicon.ico">
+  <meta name="theme-color" content="#e2801e">
+  <meta name="robots" content="index, follow">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name=”robots” content=”index, follow”>
-  <meta name="application-name" content="My site">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="My App">
-  <meta name="msapplication-TileImage" content="assets/icon-144x144.png">
-  <meta name="msapplication-TileColor" content="#3f51b5">
-  <meta name="msapplication-tap-highlight" content="no">
-  <link rel="icon" href="assets/favicon.ico">
-  <link rel="apple-touch-icon" href="assets/icon-48x48.png">
+  <link rel="apple-touch-icon" sizes="48x48" href="assets/icon-48x48.png">
   <link rel="apple-touch-icon" sizes="72x72" href="assets/icon-72x72.png">
   <link rel="apple-touch-icon" sizes="96x96" href="assets/icon-96x96.png">
   <link rel="apple-touch-icon" sizes="144x144" href="assets/icon-144x144.png">
   <link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192x192.png">
-  <title>Office of Digital Learning - Eberly College of Science at Penn State</title>
+  <meta name="msapplication-TileImage" content="assets/icon-144x144.png">
+  <meta name="msapplication-TileColor" content="#e2801e">
+  <meta name="msapplication-tap-highlight" content="no">
+  <meta name="description" content="Office of Digital Learning" />
+  <meta name="og:type" property="og:type" content="article" />
+  <meta name="og:description" property="og:description" content="Office of Digital Learning" />
+  <meta name="og:image" property="og:image" content="assets/banner.jpg" />
+  <meta name="twitter:card" property="twitter:card" content="summary_large_image" />
+  <meta name="twitter:description" property="twitter:description" content="Office of Digital Learning" />
+  <meta name="twitter:image" property="twitter:image" content="assets/banner.jpg" />
+  <meta rel="cc:license" href="https://creativecommons.org/licenses/by-sa/4.0/" content="License: Creative Commons: Attribution Share a like"/>
+  <!-- import config for Imaginary image service -->
+  <script src="./config.js"></script>
+  <!-- Service worker disabled via settings -->
   <style>
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      min-height: 98vh;
     }
+    haxcms-site-builder:not([theme-loaded]) * {
+      margin-top: 100px;
+      display: block;
+      max-width: 50vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) {
+      margin-top: 100px;
+    }
+    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) * {
+      max-width: 50vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    haxcms-site-builder[theme-loaded] .haxcms-theme-element:not(:defined) *:not(:defined) {
+      display: block;
+      min-height: 50px;
+      min-width: 200px;
+    }
+  </style>
+  <style id="loadingstyles">
     haxcms-site-builder {
       display: block;
     }
-    haxcms-site-builder:not(:defined) div.loading {
-      width: 100vw;
-      display: block;
-      position: initial;
-      height: 100vh;
-      background: white;
+    body {
+      background-color: #ffffff;
+      color: rgba(0,0,0, 0.2);
     }
-    haxcms-site-builder:not(:defined) div {
-      font-size: 6vw;
-      line-height: 1;
-      margin: 0 auto;
-      top: calc(50vh - 8vw);
-      width: 100%;
-      justify-content: center;
-      display: grid;
+    #loading {
+      background-color: #ffffff;
+      bottom: 0px;
+      left: 0px;
+      opacity: 1;
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      z-index: 99999999;
+    }
+    #loading.loaded {
+      animation: fade-out .1s ease-in-out;
+      animation-fill-mode: forwards;
+    }
+    #loading div.messaging {
+      color: rgba(0,0,0, 0.2);
+      left: 0px;
+      position: absolute;
+      right: 0px;
       text-align: center;
-      padding: 0;
-      position: relative;
-      font-family: "Courier New", Courier, monospace;
-      color: black;
+      top: 25vh;
     }
-    body[no-js] haxcms-site-builder {
-      display: none !important;
-    } 
-    #loading-logo {
-      width: 200px;
-      height: auto;
+    #loading div.messaging img {
+      width: 300px;
+      padding-bottom: 50px;
+    }
+
+    .progress-line,
+    .progress-line:before {
+      height: 8px;
+      width: 100%;
+      margin: auto;
+    }
+    .progress-line {
+      background-color: rgba(0,0,0, 0.1);
+      display: -webkit-flex;
+      display: flex;
+      width: 50vw;
+    }
+    .progress-line:before {
+      background-color: #e2801e;
+      content: '';
+      animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    @keyframes running-progress {
+      0% {
+        margin-left: 0px;
+        margin-right: 100%;
+      }
+      50% {
+        margin-left: 25%;
+        margin-right: 0%;
+      }
+      100% {
+        margin-left: 100%;
+        margin-right: 0;
+      }
+    }
+    @keyframes fade-out {
+      0% {
+        opacity: 1;
+      }
+      99% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #333333;
+        color: rgba(255,255,255, 0.2);
+      }
+      #loading {
+        background-color: #333333;
+      }
+      #loading div.messaging {
+        color: rgba(255,255,255, 0.2);
+      }
     }
   </style>
-</head>
-<body no-js vocab="http://schema.org/" prefix="oer:http://oerschema.org cc:http://creativecommons.org/ns dc:http://purl.org/dc/terms/">
-  <div id="pre-bootstrap">
-    <div class="messaging">
-      <img id="loading-logo" src="files/theme-images/logos/odl-logo.png" alt="Office of Digital Learning">
-      <div class="progress-line"></div>
-    </div>
-    <style>
-      #pre-bootstrap {
-        background-color: white;
-        bottom: 0px;
-        left: 0px;
-        opacity: 1;
-        position: fixed;
-        right: 0px;
-        top: 0px;
-        transition: all linear 300ms;
-        -webkit-transition: all linear 300ms;
-        z-index: 999999;
-      }
-      body[no-js] #pre-bootstrap {
-        display: none !important;
-      }
-      #pre-bootstrap.loaded {
-        animation: fade-out .7s ease-in-out;
-        animation-fill-mode: forwards;
-      }
-      #pre-bootstrap div.messaging {
-        color: rgba(255,255,255, 0.7);
-        font-family: Roboto;
-        left: 0px;
-        margin-top: -75px;
-        position: absolute;
-        right: 0px;
-        text-align: center;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      #pre-bootstrap img {
-        width: 300px;
-        padding-bottom: 50px;
-      }
-      .progress-line,
-      .progress-line:before {
-        height: 5px;
-        width: 100%;
-        margin: auto;
-      }
-      .progress-line {
-        background-color: rgba(0,0,0, 0.05);
-        display: -webkit-flex;
-        display: flex;
-        width: 300px;
-      }
-      .progress-line:before {
-        background-color: orange;
-        content: '';
-        animation: running-progress 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-      }
-      @keyframes running-progress {
-        0% {
-          margin-left: 0px;
-          margin-right: 100%;
-        }
-        50% {
-          margin-left: 25%;
-          margin-right: 0%;
-        }
-        100% {
-          margin-left: 100%;
-          margin-right: 0;
-        }
-      }
-      @keyframes fade-out {
-        0% {
-          opacity: 1;
-        }
-        99% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
-    </style>
-    <script>
-      window.addEventListener('load', (event) => {
-        // give the web components a second to build
-        setTimeout(function() {
-          document.querySelector('#pre-bootstrap').classList.add('loaded');
-          setTimeout(function() {
-            document.querySelector('#pre-bootstrap').setAttribute('style', 'display: none !important');
-          }, 700)
-        }, 1000)
-      });
-    </script>
-  </div>
-
-  <haxcms-site-builder id="site" file="site.json"><div class="loading"><img src="files/theme-images/logos/odl-logo.png" alt="Office of Digital Learning"></div></haxcms-site-builder>
-  <script>document.body.removeAttribute('no-js');window.__appCDN="./";window.__appForceUpgrade=false;</script>
-  <script src="./build.js"></script>
-  <script src="./build-haxcms.js"></script>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-72373482-2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
+  <script id="loadingscript">
+    globalThis.dataLayer = globalThis.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
-    gtag('config', 'UA-72373482-2');
+    globalThis.addEventListener('haxcms-ready', function(e) {
+      var s = document.createElement('script');
+      s.async = true;
+      document.body.appendChild(s);
+      // give the web components a second to build
+      setTimeout(function() {
+        document.querySelector('#loading').classList.add('loaded');
+        setTimeout(function() {
+          // GA setup — wrapped so a missing/incomplete manifest never
+          // aborts the loading-screen cleanup below
+          try {
+            var manifest = globalThis.HAXCMS.requestAvailability().store.getManifest();
+            if (manifest && manifest.metadata && manifest.metadata.site && manifest.metadata.site.settings) {
+              var gaid = manifest.metadata.site.settings.gaID || null;
+              if (gaid) {
+                gtag('config', gaid);
+                s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaid;
+              }
+            }
+          } catch (err) {
+            console.warn('GA setup skipped:', err);
+          }
+          // always remove the loading screen + its styles/script
+          var loadingEl = document.querySelector('#loading');
+          if (loadingEl && loadingEl.parentNode) { loadingEl.parentNode.removeChild(loadingEl); }
+          var loadingStyles = document.querySelector('#loadingstyles');
+          if (loadingStyles && loadingStyles.parentNode) { loadingStyles.parentNode.removeChild(loadingStyles); }
+          var loadingScript = document.querySelector('#loadingscript');
+          if (loadingScript && loadingScript.parentNode) { loadingScript.parentNode.removeChild(loadingScript); }
+        }, 100);
+      }, 300);
+    });
   </script>
-  <!-- Go to www.addthis.com/dashboard to customize your tools -->
-  <!-- <script defer type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-601477720d06b1b0"></script> -->
+</head>
+<body vocab="http://schema.org/" prefix="oer:http://oerschema.org cc:http://creativecommons.org/ns dc:http://purl.org/dc/terms/">
+  <section role="alert" id="loading" aria-busy="true">
+    <div class="messaging">
+      <img src="files/theme-images/logos/odl-logo.png" alt="Office of Digital Learning">
+      <div class="progress-line"></div>
+    </div>
+  </section>
+  <haxcms-site-builder id="site" file="site.json"><div class="loading"></div></haxcms-site-builder>
+  <script>
+    globalThis.MicroFrontendRegistryConfig = globalThis.MicroFrontendRegistryConfig || {};
+    globalThis.HAXCMSContext="php";globalThis.__appCDN="./";</script>
+  <script src="./build-haxcms.js"></script>
+  <script src="./build.js"></script>
 </body>
 </html>

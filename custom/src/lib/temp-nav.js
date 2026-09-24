@@ -1,4 +1,5 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
+import { LitElement, html, css } from "lit";
+import "@haxtheweb/simple-icon/lib/simple-icon-button-lite.js";
 
 class TempNav extends LitElement {
   static get styles() {
@@ -29,7 +30,7 @@ class TempNav extends LitElement {
           text-decoration: none;
           display: flex;
           justify-content: center;
-          padding: 15px 10px;
+          padding: var(--ddd-spacing-4) var(--ddd-spacing-3);
           text-transform: uppercase;
         }
 
@@ -62,7 +63,7 @@ class TempNav extends LitElement {
           border-radius: 50%;
           width: 50px;
           height: 50px;
-          margin: 8px;
+          margin: var(--ddd-spacing-2);
         }
 
         @media screen and (max-width: 700px) {
@@ -86,11 +87,11 @@ class TempNav extends LitElement {
         .name_nav {
           display: flex;
           align-items: center;
-          margin-left: 5px;
+          margin-left: var(--ddd-spacing-1);
         }
 
         .name_nav h1 {
-          font-size: 18px;
+          font-size: var(--ddd-font-size-xs);
           margin: 0;
           font-weight: normal;
           color: var(--theme-color-4);
@@ -98,11 +99,11 @@ class TempNav extends LitElement {
 
         @media screen and (max-width: 700px) {
           .name_nav {
-            font-size: 16px;
+            font-size: var(--ddd-font-size-xs);
           }
         }
 
-        .button_nav paper-icon-button {
+        .button_nav simple-icon-button-lite {
           position: relative;
           color: var(--theme-color-4);
           width: 45px;
@@ -138,7 +139,7 @@ class TempNav extends LitElement {
             <h1>Office of Digital Learning</h1>
           </div>
           <div class="button_nav">
-            <paper-icon-button icon="menu"></paper-icon-button>
+            <simple-icon-button-lite icon="icons:menu"></simple-icon-button-lite>
           </div>
         </div>
       </div>
@@ -147,11 +148,6 @@ class TempNav extends LitElement {
   static get tag() {
     return "temp-nav";
   }
-  constructor() {
-    super();
-    import("@polymer/iron-icons/iron-icons.js");
-    import("@polymer/paper-icon-button/paper-icon-button.js");
-  }
 }
-window.customElements.define(TempNav.tag, TempNav);
+globalThis.customElements.define(TempNav.tag, TempNav);
 export { TempNav };

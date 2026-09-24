@@ -1,6 +1,8 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
+import { LitElement, html, css } from "lit";
+import { autorun, toJS } from "mobx";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import "@haxtheweb/haxcms-elements/lib/ui-components/site/site-search.js";
+import "@haxtheweb/haxcms-elements/lib/ui-components/layout/site-modal.js";
 
 class PageSearch extends LitElement {
   static get styles() {
@@ -10,7 +12,7 @@ class PageSearch extends LitElement {
           display: block;
         }
         #search_wrap {
-          margin-right: 15px;
+          margin-right: var(--ddd-spacing-4);
         }
       `
     ];
@@ -19,7 +21,7 @@ class PageSearch extends LitElement {
     return html`
       <div id="search_wrap">
         <site-modal
-          .disabled="${this.editMode}"
+          .disabled=${this.editMode}
           icon="icons:search"
           title="Search site"
           button-label="Search"
@@ -32,14 +34,20 @@ class PageSearch extends LitElement {
   static get tag() {
     return "page-search";
   }
+  static get properties() {
+    return {
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+    };
+  }
   constructor() {
     super();
-    import("@lrnwebcomponents/haxcms-elements/lib/ui-components/site/site-search.js");
-    import("@lrnwebcomponents/haxcms-elements/lib/ui-components/layout/site-modal.js");
-    import("@polymer/iron-icon/iron-icon.js");
+    this.editMode = false;
     this.__disposer = [];
-    autorun(reaction => {
-      this.editMode = toJS(store.editMode);
+    autorun((reaction) => {
+      const _mobx_val_0 = toJS(store.editMode);
+      Promise.resolve().then(() => {
+        this.editMode = _mobx_val_0;
+      });
       this.__disposer.push(reaction);
     });
   }
@@ -50,5 +58,5 @@ class PageSearch extends LitElement {
     super.disconnectedCallback();
   }
 }
-window.customElements.define(PageSearch.tag, PageSearch);
+globalThis.customElements.define(PageSearch.tag, PageSearch);
 export { PageSearch };

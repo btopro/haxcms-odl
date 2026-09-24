@@ -1,27 +1,31 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
-import "@polymer/polymer/lib/elements/dom-repeat.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
 import "./team-card.js";
-class TeamList extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+
+class TeamList extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
         }
-      </style>
-
-      <dom-repeat items="[[_items]]">
-        <template>
+      `,
+    ];
+  }
+  render() {
+    return html`
+      ${this._items.map(
+        (item) => html`
           <team-card
-            name="[[item.title]]"
-            image="[[item.metadata.image]]"
-            item="[[item]]"
-            position="[[item.metadata.jobTitle]]"
+            name=${item.title}
+            image=${item.metadata ? item.metadata.image : ""}
+            .item=${item}
+            position=${item.metadata ? item.metadata.jobTitle : ""}
           ></team-card>
-        </template>
-      </dom-repeat>
+        `,
+      )}
     `;
   }
   static get tag() {
@@ -34,36 +38,34 @@ class TeamList extends PolymerElement {
        */
       _items: {
         type: Array,
-        value: []
-      }
+      },
     };
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    const pages = this.manifest.items;
-    const pagesFiltered = pages.filter(item => {
-      if (typeof item.metadata !== "undefined") {
-        if (typeof item.metadata.type !== "undefined") {
-          if (item.metadata.type === "team") {
-            return true;
-          }
-        }
-      }
-      return false;
-    });
-    this.set("_items", pagesFiltered);
   }
   constructor() {
     super();
+    this._items = [];
     this.__disposer = autorun(() => {
       this.manifest = toJS(store.routerManifest);
+      if (this.manifest && this.manifest.items) {
+        this._items = this.manifest.items.filter((item) => {
+          if (
+            typeof item.metadata !== "undefined" &&
+            typeof item.metadata.type !== "undefined" &&
+            item.metadata.type === "team"
+          ) {
+            return true;
+          }
+          return false;
+        });
+      }
     });
   }
   disconnectedCallback() {
-    this.__disposer();
+    if (this.__disposer) {
+      this.__disposer();
+    }
     super.disconnectedCallback();
   }
 }
-window.customElements.define(TeamList.tag, TeamList);
+globalThis.customElements.define(TeamList.tag, TeamList);
 export { TeamList };

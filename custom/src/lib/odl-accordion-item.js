@@ -1,172 +1,174 @@
-import { html, css, LitElement } from "lit-element/lit-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
 
-class OdlAccordionItem extends LitElement {
+class OdlAccordionItem extends DDD {
   static get properties() {
     return {
+      ...(super.properties || {}),
       item: { type: Object },
       active: { type: Boolean },
       isLoggedIn: { type: Boolean },
-      path: { type: String }
+      path: { type: String },
     };
   }
 
   static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
+    return [
+      super.styles || [],
+      css`
+        :host {
+          display: block;
+        }
 
-      input {
-        margin: auto;
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        margin-bottom: 10px;
-        width: 100%;
-        box-sizing: border-box;
-        color: #2c3e50;
-        font-size: 13px;
-      }
+        input {
+          margin: auto;
+          padding: 15px;
+          border: 1px solid #ccc;
+          border-radius: 3px;
+          margin-bottom: 10px;
+          width: 100%;
+          box-sizing: border-box;
+          color: #2c3e50;
+          font-size: 13px;
+        }
 
-      .container {
-        margin: 0 auto;
-        padding: 4rem;
-        width: 48rem;
-      }
+        .container {
+          margin: 0 auto;
+          padding: 4rem;
+          width: 48rem;
+        }
 
-      h3 {
-        font-size: 1.75rem;
-        color: var(--odl-haxtheme-accent-color-2);
-        padding: 1.3rem;
-        margin: 0;
-      }
+        h3 {
+          font-size: 1.75rem;
+          color: var(--odl-haxtheme-accent-color-2);
+          padding: 1.3rem;
+          margin: 0;
+        }
 
-      a {
-        position: relative;
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        width: auto;
-        padding: 1rem 3rem 1rem 1rem;
-        color: var(--odl-haxtheme-accent-color-1);
-        font-size: 1.15rem;
-        font-weight: 400;
-        border-bottom: 1px solid #ccc;
-      }
+        a {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          width: auto;
+          padding: 1rem 3rem 1rem 1rem;
+          color: var(--odl-haxtheme-accent-color-1);
+          font-size: 1.15rem;
+          font-weight: 400;
+          border-bottom: 1px solid #ccc;
+        }
 
-      a:hover,
-      a:hover::after {
-        cursor: pointer;
-        color: var(--odl-haxtheme-accent-color-2);
-      }
+        a:hover,
+        a:hover::after {
+          cursor: pointer;
+          color: var(--odl-haxtheme-accent-color-2);
+        }
 
-      a:hover::after {
-        border: 1px solid var(--odl-haxtheme-accent-color-2);
-      }
+        a:hover::after {
+          border: 1px solid var(--odl-haxtheme-accent-color-2);
+        }
 
-      a.active {
-        color: var(--odl-haxtheme-accent-color-2);
-        border-bottom: 1px solid var(--odl-haxtheme-accent-color-2);
-      }
+        a.active {
+          color: var(--odl-haxtheme-accent-color-2);
+          border-bottom: 1px solid var(--odl-haxtheme-accent-color-2);
+        }
 
-      .icon {
-        position: absolute;
-        float: right;
-        right: 1rem;
-      }
+        .icon {
+          position: absolute;
+          float: right;
+          right: 1rem;
+        }
 
-      .icon svg {
-        fill: var(--odl-haxtheme-accent-color-1);
-        width: 30px;
-        height: 30px;
-      }
+        .icon svg {
+          fill: var(--odl-haxtheme-accent-color-1);
+          width: 30px;
+          height: 30px;
+        }
 
-      .active .icon svg {
-        fill: var(--odl-haxtheme-accent-color-2);
-      }
+        .active .icon svg {
+          fill: var(--odl-haxtheme-accent-color-2);
+        }
 
-      .content {
-        opacity: 0;
-        padding: 0 1rem;
-        max-height: 0;
-        border-bottom: 1px solid #ccc;
-        overflow: hidden;
-        clear: both;
-        -webkit-transition: all 0.2s ease 0.15s;
-        -o-transition: all 0.2s ease 0.15s;
-        transition: all 0.2s ease 0.15s;
-        position: relative;
-      }
+        .content {
+          opacity: 0;
+          padding: 0 1rem;
+          max-height: 0;
+          border-bottom: 1px solid #ccc;
+          overflow: hidden;
+          clear: both;
+          transition: all 0.2s ease 0.15s;
+          position: relative;
+        }
 
-      .content p {
-        font-size: 1rem;
-        font-weight: 300;
-      }
+        .content p {
+          font-size: 1rem;
+          font-weight: 300;
+        }
 
-      .content.active {
-        opacity: 1;
-        padding: 1rem;
-        max-height: 100%;
-        -webkit-transition: all 0.35s ease 0.15s;
-        -o-transition: all 0.35s ease 0.15s;
-        transition: all 0.35s ease 0.15s;
-      }
+        .content.active {
+          opacity: 1;
+          padding: 1rem;
+          max-height: 100%;
+          transition: all 0.35s ease 0.15s;
+        }
 
-      #edit {
-        display: inline-block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 1em;
-        border: none;
-      }
+        #edit {
+          display: inline-block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          padding: 1em;
+          border: none;
+        }
 
-      #edit-icon {
-        width: 20px;
-        height: 20px;
-      }
-    `;
+        #edit-icon {
+          width: 20px;
+          height: 20px;
+        }
+      `,
+    ];
   }
 
   constructor() {
     super();
-    this.__disposer = [];
     this.active = false;
     this.isLoggedIn = false;
     this.path = null;
     this.item = {};
+    this.__toggleAccordion = this.__toggleAccordion.bind(this);
   }
 
   firstUpdated() {
-    this.shadowRoot
-      .querySelector(".accordion-item a")
-      .addEventListener("click", this.__toggleAccordion.bind(this));
+    var link = this.shadowRoot.querySelector(".accordion-item a");
+    if (link) {
+      link.addEventListener("click", this.__toggleAccordion);
+    }
   }
 
   disconnectedCallback() {
-    this.shadowRoot
-      .querySelector(".accordion-item a")
-      .removeEventListener("click", this.__toggleAccordion.bind(this));
+    var link = this.shadowRoot && this.shadowRoot.querySelector(".accordion-item a");
+    if (link) {
+      link.removeEventListener("click", this.__toggleAccordion);
+    }
     super.disconnectedCallback();
   }
 
   updated(changedProperties) {
-    if (this.item) {
+    super.updated(changedProperties);
+    if (this.item && changedProperties.has("item")) {
       const contentOutlet = this.shadowRoot.querySelector("#content-outlet");
-      contentOutlet.innerHTML = this.item.content;
+      if (contentOutlet) {
+        contentOutlet.innerHTML = this.item.content;
+      }
       // update path
-      const manifestItem = store.routerManifest.items.find(
-        i => i.id === this.item.id
-      );
-      this.path = manifestItem.location;
+      if (store.routerManifest && store.routerManifest.items) {
+        const manifestItem = store.routerManifest.items.find(
+          (i) => i.id === this.item.id,
+        );
+        if (manifestItem) {
+          this.path = manifestItem.slug;
+        }
+      }
     }
   }
 
@@ -242,7 +244,7 @@ class OdlAccordionItem extends LitElement {
           >
             <g>
               <polygon
-                points="0,303.947 0,383.947 80,383.947 316.053,147.893 236.053,67.893 			"
+                points="0,303.947 0,383.947 80,383.947 316.053,147.893 236.053,67.893 \t\t\t"
               />
               <path
                 d="M377.707,56.053L327.893,6.24c-8.32-8.32-21.867-8.32-30.187,0l-39.04,39.04l80,80l39.04-39.04
@@ -260,10 +262,12 @@ class OdlAccordionItem extends LitElement {
   __toggleAccordion(e) {
     this.active = !this.active;
     e.target.classList.toggle("active");
-    e.target.nextElementSibling.classList.toggle("active");
+    if (e.target.nextElementSibling) {
+      e.target.nextElementSibling.classList.toggle("active");
+    }
   }
 }
 
-customElements.define("odl-accordion-item", OdlAccordionItem);
+globalThis.customElements.define("odl-accordion-item", OdlAccordionItem);
 
 export { OdlAccordionItem };

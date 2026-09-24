@@ -1,4 +1,4 @@
-import { html, css, LitElement } from 'lit-element/lit-element.js';
+import { html, css, LitElement } from "lit";
 
 class HaxForm extends LitElement {
   static get properties() {
@@ -23,6 +23,7 @@ class HaxForm extends LitElement {
     this.loading = false;
     this._form = null;
     this.formId = null;
+    this.slotChangedHandler = this.slotChangedHandler.bind(this);
   }
 
   /**
@@ -32,26 +33,28 @@ class HaxForm extends LitElement {
    */
   firstUpdated() {
     this.shadowRoot
-      .querySelector('slot')
-      .addEventListener('slotchange', this.slotChangedHandler.bind(this));
+      .querySelector("slot")
+      .addEventListener("slotchange", this.slotChangedHandler);
   }
 
   disconnectedCallback() {
-    this.shadowRoot
-      .querySelector('slot')
-      .removeEventListener('slotchange', this.slotChangedHandler.bind(this));
+    var slot = this.shadowRoot && this.shadowRoot.querySelector("slot");
+    if (slot) {
+      slot.removeEventListener("slotchange", this.slotChangedHandler);
+    }
     super.disconnectedCallback();
   }
 
   updated(changedProperties) {
+    super.updated(changedProperties);
     changedProperties.forEach((oldValue, propName) => {
-      if (propName == 'loading') {
+      if (propName == "loading") {
         this.dispatchEvent(
           new CustomEvent("loading-changed", {
             detail: {
               value: this[propName],
-            }
-          })
+            },
+          }),
         );
       }
     });
@@ -60,16 +63,16 @@ class HaxForm extends LitElement {
   /**
    * When new children are added look for a form element and
    * compture all submission events from that form.
-   * @param {event} e 
+   * @param {event} e
    */
   slotChangedHandler(e) {
     // get all children
     const nodes = e.target.assignedNodes({ flatten: true });
-    const form = [...nodes].find(i => i.nodeName === 'FORM');
+    const form = [...nodes].find((i) => i.nodeName === "FORM");
     // if there is a form
     if (form) {
       this._form = form;
-      form.addEventListener('submit', _e => {
+      form.addEventListener("submit", (_e) => {
         _e.preventDefault();
         // needed for safari
         _e.stopPropagation();
@@ -94,29 +97,28 @@ class HaxForm extends LitElement {
       // get the form id from hax-form or the child form
       const id = this.formId || form.id;
 
-      this.loading = true
+      this.loading = true;
 
       fetch(this.endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id,
           values,
         }),
       })
-        .then(res => {
+        .then((res) => {
           if (res.ok) {
-            this.dispatchEvent(new CustomEvent('subission-successful'))
+            this.dispatchEvent(new CustomEvent("subission-successful"));
+          } else {
+            this.dispatchEvent(new CustomEvent("subission-error"));
           }
-          else {
-            this.dispatchEvent(new CustomEvent('subission-error'))
-          }
-          return res
+          return res;
         })
         .finally(() => {
-          this.loading = false
+          this.loading = false;
         });
     } else {
       console.error(`Endpoint not defined`);
@@ -125,14 +127,14 @@ class HaxForm extends LitElement {
 
   /**
    * Collect all values of a form
-   * @param {DOM Node} form 
+   * @param {DOM Node} form
    * @return {object}
    *  - value
    *  - name
    */
   static collectFormValues(form) {
-    const formItems = form.querySelectorAll('[name]');
-    const values = [...formItems].map(i => ({ name: i.name, value: i.value }));
+    const formItems = form.querySelectorAll("[name]");
+    const values = [...formItems].map((i) => ({ name: i.name, value: i.value }));
     return values;
   }
 
@@ -145,6 +147,6 @@ class HaxForm extends LitElement {
   }
 }
 
-customElements.define('hax-form', HaxForm)
+globalThis.customElements.define("hax-form", HaxForm);
 
-export { HaxForm }
+export { HaxForm };

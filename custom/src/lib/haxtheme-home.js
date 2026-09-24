@@ -1,5 +1,8 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import "@lrnwebcomponents/haxcms-elements/lib/ui-components/query/site-query.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
+import "@haxtheweb/haxcms-elements/lib/ui-components/query/site-query.js";
 import "./homepage-banner.js";
 import "./info-box.js";
 import "./news-feed.js";
@@ -8,10 +11,56 @@ import "./testimonials-feed.js";
 import "./page-feature.js";
 import "./content-listing.js";
 import "./odl-promo-tile.js";
-class HaxThemeHome extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+
+class HaxThemeHome extends DDD {
+  static get tag() {
+    return "haxtheme-home";
+  }
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      __newsitems: { type: Array },
+      __spotlightitems: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.__newsitems = [];
+    this.__spotlightitems = [];
+    this.__newsitemsChanged = this.__newsitemsChanged.bind(this);
+    this.__spotlightitemsChanged = this.__spotlightitemsChanged.bind(this);
+    // Stable condition/sort objects so site-query doesn't see a new
+    // reference each render (which would cause an infinite re-query loop).
+    this.__newsConditions = { "metadata.type": "news" };
+    this.__newsSort = { order: "ASC" };
+    this.__spotlightConditions = { "metadata.type": "spotlight" };
+    this.__spotlightSort = { order: "DES" };
+    this.__disposer = autorun(() => {
+      this.editMode = toJS(store.editMode);
+    });
+  }
+
+  disconnectedCallback() {
+    this.__disposer();
+    super.disconnectedCallback();
+  }
+
+  __newsitemsChanged(e) {
+    this.__newsitems = e.detail.value;
+  }
+
+  __spotlightitemsChanged(e) {
+    this.__spotlightitems = e.detail.value;
+  }
+
+  static get styles() {
+    return [
+      super.styles || [],
+      css`
         :host {
           display: block;
           --theme-color-1: #363533;
@@ -19,26 +68,20 @@ class HaxThemeHome extends PolymerElement {
           --theme-color-3: #f5f5f5;
           --theme-color-4: #fff;
         }
-        /**
-       * Hide the slotted content during edit mode. This must be here to work.
-       */
         :host([edit-mode]) #slot {
           display: none;
         }
         info-box#about {
           margin: 80px 0 15px 0;
         }
-
         @media screen and (max-width: 768px) {
           info-box#about {
             margin: 40px 0 0 0;
           }
         }
-
         odl-promo-tile {
           --button-hover-color: none;
         }
-
         #promo_tile_wrap {
           display: grid;
           grid-template-columns: repeat(5, auto);
@@ -46,31 +89,26 @@ class HaxThemeHome extends PolymerElement {
           border-top-width: 20px;
           border-top-color: var(--theme-color-1);
         }
-
         @media screen and (max-width: 768px) {
           #promo_tile_wrap {
             border-top: none;
           }
         }
-
         @media screen and (max-width: 1330px) {
           #promo_tile_wrap {
             grid-template-columns: repeat(2, auto);
           }
         }
-
         @media screen and (max-width: 768px) {
           #promo_tile_wrap {
             grid-template-columns: repeat(1, auto);
           }
         }
-
         @media screen and (max-width: 1124px) {
           #promo_tile_wrap {
             padding: 0;
           }
         }
-
         @media screen and (max-width: 1124px) {
           page-feature {
             width: 100%;
@@ -79,13 +117,25 @@ class HaxThemeHome extends PolymerElement {
             margin-right: auto;
           }
         }
-
         @media screen and (max-width: 768px) {
           page-feature {
             width: 94%;
           }
         }
-      </style>
+        body.dark-mode #promo_tile_wrap {
+          border-top-color: light-dark(#363533, #f5f5f5);
+        }
+        @media (prefers-color-scheme: dark) {
+          #promo_tile_wrap {
+            border-top-color: #f5f5f5;
+          }
+        }
+      `,
+    ];
+  }
+
+  render() {
+    return html`
       <homepage-banner
         image="files/theme-images/page-banners/odl_homepage_banner.jpg"
         alt="students receiving instruction in classroom"
@@ -107,7 +157,8 @@ class HaxThemeHome extends PolymerElement {
             alt="NGDLE stands for: Next Generation Learning Environment."
             url="coursemanagement"
           >
-            Create and deliver course content using systems designed to empower instructors.
+            Create and deliver course content using systems designed to empower
+            instructors.
           </odl-promo-tile>
         </div>
         <div class="promo_tile">
@@ -118,9 +169,8 @@ class HaxThemeHome extends PolymerElement {
             alt=""
             url="lab"
           >
-            We're always exploring, testing, and sharing new
-            technologies; step into our innovation lab and see
-            what we've been up to.
+            We're always exploring, testing, and sharing new technologies; step
+            into our innovation lab and see what we've been up to.
           </odl-promo-tile>
         </div>
         <div class="promo_tile">
@@ -149,54 +199,52 @@ class HaxThemeHome extends PolymerElement {
           </odl-promo-tile>
         </div>
       </div>
-      <div id="page_feature">
+      <div class="page_feature">
         <site-query
-          result="{{__newsitems}}"
-          conditions='{
-          "metadata.type": "news"
-        }'
+          .conditions=${this.__newsConditions}
           limit="1"
-          sort='{ "order": "ASC" }'
+          .sort=${this.__newsSort}
+          @result-changed=${this.__newsitemsChanged}
         ></site-query>
-        <dom-repeat items="[[__newsitems]]" mutable-data>
-          <template>
+        ${this.__newsitems.map(
+          (item) => html`
             <page-feature
               title="Top News"
-              subtitle="[[item.title]]"
-              info="[[item.metadata.author]]"
-              url="[[item.location]]"
-              image="[[item.metadata.fields.image]]"
-              alt="[[item.metadata.fields.imageAlt]]"
+              subtitle=${item.title}
+              info=${item.metadata.author}
+              url=${item.slug}
+              image=${item.metadata.fields.image}
+              alt=${item.metadata.fields.imageAlt}
             >
-              [[item.description]]</page-feature
-            >
-          </template>
-        </dom-repeat>
+              ${item.description}
+            </page-feature>
+          `,
+        )}
       </div>
       <div id="news_feed">
         <news-feed></news-feed>
       </div>
-      <div id="page_feature">
+      <div class="page_feature">
         <site-query
-          result="{{__spotlightitems}}"
-          conditions='{ "metadata.type": "spotlight" }'
+          .conditions=${this.__spotlightConditions}
           limit="1"
-          sort='{ "order": "DES" }'
+          .sort=${this.__spotlightSort}
+          @result-changed=${this.__spotlightitemsChanged}
         ></site-query>
-        <dom-repeat items="[[__spotlightitems]]" mutable-data>
-          <template>
+        ${this.__spotlightitems.map(
+          (item) => html`
             <page-feature
               title="Faculty Spotlight"
-              subtitle="[[item.metadata.fields.name]]"
-              info="[[item.metadata.fields.jobTitle]]"
-              url="[[item.location]]"
-              image="[[item.metadata.fields.image]]"
-              alt="[[item.metadata.fields.imageAlt]]"
+              subtitle=${item.metadata.fields.name}
+              info=${item.metadata.fields.jobTitle}
+              url=${item.slug}
+              image=${item.metadata.fields.image}
+              alt=${item.metadata.fields.imageAlt}
             >
-              [[item.description]]</page-feature
-            >
-          </template>
-        </dom-repeat>
+              ${item.description}
+            </page-feature>
+          `,
+        )}
       </div>
       <div id="videos_feed">
         <videos-feed></videos-feed>
@@ -212,14 +260,6 @@ class HaxThemeHome extends PolymerElement {
       </div>
     `;
   }
-  static get tag() {
-    return "haxtheme-home";
-  }
-
-  constructor() {
-    super();
-    import("@polymer/paper-button/paper-button.js");
-  }
 }
-window.customElements.define(HaxThemeHome.tag, HaxThemeHome);
+globalThis.customElements.define(HaxThemeHome.tag, HaxThemeHome);
 export { HaxThemeHome };

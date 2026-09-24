@@ -1,28 +1,46 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import "@polymer/paper-input/paper-input.js"
-class HaxthemeSearch extends LitElement {
-  /**
-   * LitElement constructable styles enhancement
-   */
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+
+class HaxthemeSearch extends DDD {
+  static get tag() {
+    return "haxtheme-search";
+  }
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      results: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.results = [];
+    this.__inputChanged = this.__inputChanged.bind(this);
+  }
+
   static get styles() {
     return [
+      super.styles || [],
       css`
         :host {
           display: flex;
           flex: 1 1 auto;
           flex-direction: column;
         }
-
+        :host([edit-mode]) #slot {
+          display: none;
+        }
         #container {
           display: block;
           padding: 1em;
         }
-
         #search {
           max-width: 900px;
           margin: auto;
         }
-
         input {
           margin: auto;
           padding: 15px;
@@ -32,42 +50,38 @@ class HaxthemeSearch extends LitElement {
           width: 100%;
           box-sizing: border-box;
           font-family: montserrat;
-          color: #2C3E50;
+          color: #2c3e50;
           font-size: 13px;
         }
-      `
+      `,
     ];
   }
+
   render() {
     return html`
       <div id="container">
         <div id="search">
           <h1>Search</h1>
-          <input @input=${this.__inputChanged}>
+          <input
+            @input=${this.__inputChanged}
+            type="search"
+            placeholder="Search..."
+            aria-label="Search this site"
+          />
         </div>
-        <div id="results">
-        </div>
+        <div id="results"></div>
       </div>
     `;
   }
-  static get tag() {
-    return "haxtheme-search";
-  }
-  static get properties() {
-    return { 
-      results: {
-        type: Array
-      }
-    };
-  }
-  constructor() {
-    super();
-    this.results = []
-  }
+
   __inputChanged(e) {
-    const value = e.target.value
-    const results = fetch('lunrSearchIndex.json').then(res => res.json())
+    const value = e.target.value;
+    fetch("lunrSearchIndex.json")
+      .then((res) => res.json())
+      .then((res) => {
+        this.results = res;
+      });
   }
 }
-window.customElements.define(HaxthemeSearch.tag, HaxthemeSearch);
+globalThis.customElements.define(HaxthemeSearch.tag, HaxthemeSearch);
 export { HaxthemeSearch };

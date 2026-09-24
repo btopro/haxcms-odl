@@ -1,15 +1,18 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-class PageFeature extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+import "@haxtheweb/simple-icon/lib/simple-icons.js";
+
+class PageFeature extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
         }
 
         a {
           text-decoration: var(--haxtheme-page-feature-a-text-decoration);
-          @apply --haxtheme-page-feature-a;
         }
 
         h1 {
@@ -17,13 +20,11 @@ class PageFeature extends PolymerElement {
           margin: var(--haxtheme-page-feature-h1-margin, 0);
           line-height: var(--haxtheme-page-feature-h1-line-height, 1);
           font-weight: var(--haxtheme-page-feature-h1-font-weight);
-          @apply --haxtheme-page-feature-h1;
         }
 
         @media screen and (max-width: 768px) {
           h1 {
             font-size: var(--haxtheme-page-feature-h1-font-size-mobile, 28px);
-            @apply --haxtheme-page-feature-h1-mobile;
           }
         }
 
@@ -31,20 +32,19 @@ class PageFeature extends PolymerElement {
           font-size: var(--haxtheme-page-feature-h2-font-size, 32px);
           margin: var(--haxtheme-page-feature-h2-margin, 0);
           font-weight: var(--haxtheme-page-feature-h2-font-weight);
-          @apply --haxtheme-page-feature-h2;
         }
 
         @media screen and (max-width: 768px) {
           h2 {
             font-size: var(--haxtheme-page-feature-h2-font-size-mobile, 24px);
-            @apply --haxtheme-page-feature-h2-mobile;
           }
         }
 
         #feature_wrap {
-          background-color: var(--haxtheme-page-feature-wrap-background-color);
+          background-color: var(
+            --haxtheme-page-feature-wrap-background-color
+          );
           padding: var(--haxtheme-page-feature-wrap-padding, 40px 0 55px 0);
-          @apply --haxtheme-page-feature-feature-wrap;
         }
 
         @media screen and (max-width: 1012px) {
@@ -65,7 +65,6 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-feature-wrap-background-color-mobile,
               transparent
             );
-            @apply --haxtheme-page-feature-feature-wrap-mobile;
           }
         }
 
@@ -87,7 +86,6 @@ class PageFeature extends PolymerElement {
             --haxtheme-page-feature-border-border-top-color
           );
           margin: var(--haxtheme-page-feature-border-margin, 0 auto 0 auto);
-          @apply --haxtheme-page-feature-border;
         }
 
         @media screen and (max-width: 1012px) {
@@ -103,7 +101,6 @@ class PageFeature extends PolymerElement {
               5px 0 0 0
             );
             width: var(--haxtheme-page-feature-border-width, 100%);
-            @apply --haxtheme-page-feature-border-mobile;
           }
         }
 
@@ -122,7 +119,6 @@ class PageFeature extends PolymerElement {
           );
           width: var(--haxtheme-page-feature-feature-image-width, 50%);
           height: var(--haxtheme-page-feature-feature-image-height, 400px);
-          @apply --haxtheme-page-feature-feature-image;
         }
 
         @media screen and (max-width: 1012px) {
@@ -139,7 +135,6 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-feature-image-width-mobile,
               100%
             );
-            @apply --haxtheme-page-feature-feature-image-mobile;
           }
         }
 
@@ -170,7 +165,6 @@ class PageFeature extends PolymerElement {
                 --haxtheme-page-feature-feature-description-wrap-box-shadow-color
               )
           );
-          @apply --haxtheme-page-feature-feature-description-wrap;
         }
 
         @media screen and (max-width: 1124px) {
@@ -191,7 +185,6 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-feature-description-wrap-margin,
               0
             );
-            @apply --haxtheme-page-feature-feature-description-wrap-mobile;
           }
         }
 
@@ -210,7 +203,6 @@ class PageFeature extends PolymerElement {
           );
           padding: var(--haxtheme-page-feature-title-wrap-padding, 0 0 0 15px);
           margin: var(--haxtheme-page-feature-title-wrap-margin, 20px 0 0 20px);
-          @apply --haxtheme-page-feature-title-wrap;
         }
 
         @media screen and (max-width: 768px) {
@@ -219,7 +211,6 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-title-wrap-margin-mobile,
               20px 0 0 0
             );
-            @apply --haxtheme-page-feature-title-wrap-mobile;
           }
         }
 
@@ -231,7 +222,6 @@ class PageFeature extends PolymerElement {
             --haxtheme-page-feature-description-padding,
             25px 25px 15px
           );
-          @apply --haxtheme-page-feature-description;
         }
 
         @media screen and (max-width: 768px) {
@@ -244,14 +234,12 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-description-margin-mobile,
               0 0 25px 0
             );
-            @apply --haxtheme-page-feature-description-mobile;
           }
         }
 
         #sub_info {
           font-size: var(--haxtheme-page-feature-sub-info-font-size, 20px);
           font-weight: var(--haxtheme-page-feature-sub-info-font-weight);
-          @apply --haxtheme-page-feature-sub-info;
         }
 
         #action_button {
@@ -264,7 +252,6 @@ class PageFeature extends PolymerElement {
             --haxtheme-page-feature-action-button-margin,
             0 25px 25px 0
           );
-          @apply --haxtheme-page-feature-action-button;
         }
 
         @media screen and (max-width: 768px) {
@@ -273,48 +260,66 @@ class PageFeature extends PolymerElement {
               --haxtheme-page-feature-action-button-justify-content-mobile,
               center
             );
-            margin: var(--haxtheme-page-feature-action-button-margin-mobile, 0);
-            @apply --haxtheme-page-feature-action-button-mobile;
+            margin: var(
+              --haxtheme-page-feature-action-button-margin-mobile,
+              0
+            );
           }
         }
 
-        paper-button#feature {
+        a#feature {
+          display: inline-flex;
+          align-items: center;
           color: var(--haxtheme-page-feature-paper-button-feature-color);
-          @apply --haxtheme-page-feature-paper-button-feature;
+          text-decoration: none;
+          font-size: var(--ddd-font-size-xs, 16px);
         }
 
-        paper-button#feature:hover,
-        paper-button#feature:focus {
-          color: var(--haxtheme-page-feature-paper-button-feature-color-active);
-          @apply --haxtheme-page-feature-paper-button-feature-active;
+        a#feature:hover,
+        a#feature:focus {
+          color: var(
+            --haxtheme-page-feature-paper-button-feature-color-active
+          );
         }
-      </style>
+
+        a#feature .title {
+          margin-right: var(--ddd-spacing-1, 4px);
+        }
+
+        simple-icon-lite {
+          --simple-icon-height: var(--ddd-icon-size-sm, 16px);
+          --simple-icon-width: var(--ddd-icon-size-sm, 16px);
+        }
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="feature_wrap">
         <div id="border">
           <div
             id="feature_image"
-            style$="background-image:url([[image]])"
-            alt="[[alt]]"
+            role="img"
+            aria-label=${this.alt}
+            style=${`background-image:url(${this.image})`}
           ></div>
           <div id="feature_description_wrap">
             <div id="title_wrap">
               <div id="title">
-                <h1>[[title]]</h1>
+                <h1>${this.title}</h1>
               </div>
               <div id="sub_title">
-                <h2>[[subtitle]]</h2>
+                <h2>${this.subtitle}</h2>
               </div>
-              <div id="sub_info">[[info]]</div>
+              <div id="sub_info">${this.info}</div>
             </div>
             <div id="description">
               <slot></slot>
             </div>
             <div id="action_button">
-              <a href\$="[[url]]">
-                <paper-button noink id="feature">
-                  <div class="title">Read More</div>
-                  <iron-icon icon="chevron-right"></iron-icon>
-                </paper-button>
+              <a href="${this.url}" id="feature">
+                <span class="title">Read More</span>
+                <simple-icon-lite icon="chevron-right"></simple-icon-lite>
               </a>
             </div>
           </div>
@@ -331,46 +336,40 @@ class PageFeature extends PolymerElement {
        * Image source
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Alt text for image
        */
       alt: {
-        type: String
+        type: String,
       },
       /**
        * Title for feature
        */
       title: {
-        type: String
+        type: String,
       },
       /**
        * Subtitle for feature
        */
       subtitle: {
-        type: String
+        type: String,
       },
       /**
        * Sub info for feature
        */
       info: {
-        type: String
+        type: String,
       },
       /**
        * Url for feature
        */
       url: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
-  constructor() {
-    super();
-    import("@polymer/iron-image/iron-image.js");
-    import("@polymer/iron-icons/iron-icons.js");
-    import("@polymer/paper-button/paper-button.js");
-  }
 }
-window.customElements.define(PageFeature.tag, PageFeature);
+globalThis.customElements.define(PageFeature.tag, PageFeature);
 export { PageFeature };

@@ -2,9 +2,9 @@
  * Copyright 2019 The Pennsylvania State University
  * @license Apache-2.0, see License.md for full text.
  */
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { LitElement, html, css } from "lit";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
 
 /**
  * `site-menu`
@@ -62,12 +62,15 @@ class ResourcesSidemenu extends LitElement {
    */
   constructor() {
     super();
-    import("@lrnwebcomponents/map-menu/map-menu.js");
     this.__disposer = [];
-    autorun(reaction => {
-      this.__updateMenu(toJS(store.routerManifest));
-      this.__disposer.push(reaction);
-    });
+    this.__disposer.push(
+      autorun(() => {
+        const _mobx_val_0 = toJS(store.routerManifest);
+        Promise.resolve().then(() => {
+          this.__updateMenu(_mobx_val_0);
+        });
+      }),
+    );
   }
   /**
    * LitElement life cycle - properties definition
@@ -78,11 +81,11 @@ class ResourcesSidemenu extends LitElement {
        * Manifest with router / location enhancements
        */
       manifest: {
-        type: Object
+        type: Object,
       },
       activeItem: {
-        type: Object
-      }
+        type: Object,
+      },
     };
   }
   /**
@@ -94,25 +97,29 @@ class ResourcesSidemenu extends LitElement {
     `;
   }
   disconnectedCallback() {
-    for (var i in this.__disposer) {
-      this.__disposer[i].dispose();
-    }
+    this.__disposer.forEach((d) => d());
     super.disconnectedCallback();
   }
   __updateMenu(routerManifest) {
     // figure out where to start
-    const topLevelObject = routerManifest.items.find(i => i.id === "resources");
-    this.manifest = topLevelObject;
+    if (routerManifest && routerManifest.items) {
+      const topLevelObject = routerManifest.items.find(
+        (i) => i.id === "resources",
+      );
+      this.manifest = topLevelObject;
+    }
   }
   __renderSideMenu(item) {
     if (item) {
       return html`
         <ul>
           <li>
-            <a href="${item.location}">${item.title}</a>
-            ${item.children && item.children.length > 0 ? html`
-              ${item.children.map(i => this.__renderSideMenu(i))}
-            ` : ""}
+            <a href="${item.slug}">${item.title}</a>
+            ${item.children && item.children.length > 0
+              ? html`
+                  ${item.children.map((i) => this.__renderSideMenu(i))}
+                `
+              : ""}
           </li>
         </ul>
       `;
@@ -121,5 +128,5 @@ class ResourcesSidemenu extends LitElement {
     }
   }
 }
-window.customElements.define(ResourcesSidemenu.tag, ResourcesSidemenu);
+globalThis.customElements.define(ResourcesSidemenu.tag, ResourcesSidemenu);
 export { ResourcesSidemenu };

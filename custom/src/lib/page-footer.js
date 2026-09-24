@@ -1,10 +1,13 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 import "./haxtheme-icons.js";
 
-class PageFooter extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class PageFooter extends DDD {
+  static get styles() {
+    return [
+      super.styles,
+      css`
         :host {
           display: block;
         }
@@ -27,50 +30,59 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-social-wrap-align-items,
             center
           );
-          @apply --haxtheme-page-footer-social-wrap;
         }
 
         @media screen and (max-width: 768px) {
           #social_wrap {
             height: var(--haxtheme-page-footer-social-wrap-height-mobile, 20px);
-            @apply --haxtheme-page-footer-social-wrap-mobile;
           }
         }
 
         #icons {
           display: var(--haxtheme-page-footer-icons-display, flex);
-          @apply --haxtheme-page-footer-icons;
         }
 
-        iron-icon {
-          width: var(--haxtheme-page-footer-iron-icon-width, 40px);
-          height: var(--haxtheme-page-footer-iron-icon-height, 40px);
-          fill: var(--haxtheme-page-footer-iron-icon-fill);
-          @apply --haxtheme-page-footer-iron-icon;
+        simple-icon-lite {
+          --simple-icon-width: var(
+            --haxtheme-page-footer-iron-icon-width,
+            40px
+          );
+          --simple-icon-height: var(
+            --haxtheme-page-footer-iron-icon-height,
+            40px
+          );
+          color: var(--haxtheme-page-footer-iron-icon-fill);
         }
 
         @media screen and (max-width: 768px) {
-          iron-icon {
-            width: var(--haxtheme-page-footer-iron-icon-width-mobile, 30px);
-            height: var(--haxtheme-page-footer-iron-icon-height-mobile, 30px);
-            @apply --haxtheme-page-footer-iron-icon-mobile;
+          simple-icon-lite {
+            --simple-icon-width: var(
+              --haxtheme-page-footer-iron-icon-width-mobile,
+              30px
+            );
+            --simple-icon-height: var(
+              --haxtheme-page-footer-iron-icon-height-mobile,
+              30px
+            );
           }
         }
 
-        paper-button {
+        .social-link {
           min-width: var(--haxtheme-page-footer-paper-button-min-width, 4em);
           padding: var(--haxtheme-page-footer-paper-button-padding, 0);
           margin: var(--haxtheme-page-footer-paper-button-margin, 0);
-          @apply --haxtheme-page-footer-paper-button;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
         }
 
         @media screen and (max-width: 768px) {
-          paper-button {
+          .social-link {
             min-width: var(
               --haxtheme-page-footer-paper-button-min-width-mobile,
               3em
             );
-            @apply --haxtheme-page-footer-paper-button-mobile;
           }
         }
 
@@ -92,7 +104,6 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-info-wrap-background-color
           );
           height: var(--haxtheme-page-footer-info-wrap-height, 200px);
-          @apply --haxtheme-page-footer-info-wrap;
         }
 
         .address {
@@ -102,18 +113,16 @@ class PageFooter extends PolymerElement {
           line-height: var(--haxtheme-page-footer-address-line-height, 1.2);
           text-align: var(--haxtheme-page-footer-address-text-align, center);
           margin: var(--haxtheme-page-footer-address-margin, 25px 0 0 0);
-          @apply --haxtheme-page-footer-address;
         }
 
         @media screen and (max-width: 768px) {
           .address {
             font-size: var(
               --haxtheme-page-footer-address-font-size-mobile,
-              12px
+              var(--ddd-font-size-xs, 12px)
             );
             line-height: var(--haxtheme-page-footer-address-line-height, 0);
             margin: var(--haxtheme-page-footer-address-margin, 10px 0 0 0);
-            @apply --haxtheme-page-footer-address-mobile;
           }
         }
 
@@ -121,7 +130,6 @@ class PageFooter extends PolymerElement {
           font-size: var(--haxtheme-page-footer-basement-font-size);
           font-weight: var(--haxtheme-page-footer-basement-font-weight);
           line-height: var(--haxtheme-page-footer-basement-line-height, 1.2);
-          @apply --haxtheme-page-footer-basement;
         }
 
         .legal_statement {
@@ -130,7 +138,6 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-legal-statement-padding,
             10px 0 0 0
           );
-          @apply --haxtheme-page-footer-legal-statement;
         }
 
         .legal_item {
@@ -151,7 +158,6 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-legal-item-border-right-color
           );
           height: var(--haxtheme-page-footer-legal-item-height, 0);
-          @apply --haxtheme-page-footer-legal-item;
         }
 
         @media screen and (max-width: 768px) {
@@ -161,12 +167,14 @@ class PageFooter extends PolymerElement {
               --haxtheme-page-footer-legal-item-margin-mobile,
               5px 0 25px 0
             );
-            padding: var(--haxtheme-page-footer-legal-item-padding-mobile, 2px);
+            padding: var(
+              --haxtheme-page-footer-legal-item-padding-mobile,
+              2px
+            );
             font-size: var(
               --haxtheme-page-footer-legal-item-font-size-mobile,
-              12px
+              var(--ddd-font-size-xs, 12px)
             );
-            @apply --haxtheme-page-footer-legal-item-mobile;
           }
         }
 
@@ -175,12 +183,13 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-legal-item-a-text-decoration
           );
           color: var(--haxtheme-page-footer-legal-item-a-color);
-          @apply --haxtheme-page-footer-legal-item-a;
         }
 
         .legal_item a:hover {
-          color: var(--haxtheme-page-footer-legal-item-a-hover-color, #000000);
-          @apply --haxtheme-page-footer-legal-item-a-hover;
+          color: var(
+            --haxtheme-page-footer-legal-item-a-hover-color,
+            #000000
+          );
         }
 
         .legal_item:last-child {
@@ -188,12 +197,10 @@ class PageFooter extends PolymerElement {
             --haxtheme-page-footer-legal-item-last-child-border,
             none
           );
-          @apply --haxtheme-page-footer-legal-item-last-child;
         }
 
         #odl_mark {
           margin: var(--haxtheme-page-footer-odl-mark-margin, 25px 0 15px 0);
-          @apply --haxtheme-page-footer-odl-mark;
         }
 
         #odl_mark a {
@@ -216,64 +223,115 @@ class PageFooter extends PolymerElement {
           );
           padding: var(--haxtheme-page-footer-odl-mark-a-padding, 8px);
           opacity: var(--haxtheme-page-footer-odl-mark-a-opacity, 0.4);
-          @apply --haxtheme-page-footer-odl-mark-a;
         }
-      </style>
+
+        .odl-mark-img {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+        }
+      `,
+    ];
+  }
+  static get tag() {
+    return "page-footer";
+  }
+  constructor() {
+    super();
+  }
+  render() {
+    return html`
       <div id="footer_wrap">
         <div id="social_wrap">
           <div id="icons">
             <div class="icon">
-              <a href="https://twitter.com/Eberly_ODL" target="_blank">
-                <paper-button id="twitter" aria-label="twitter" noink="">
-                  <iron-icon
-                    icon="haxthemeicons:twitter"
-                    role="img"
-                  ></iron-icon>
-                </paper-button>
-              </a>
-            </div>
-            <div class="icon">
-              <a href="https://vimeo.com/user38447507" target="_blank">
-                <paper-button id="vimeo" aria-label="vimeo" noink="">
-                  <iron-icon icon="haxthemeicons:vimeo" role="img"></iron-icon>
-                </paper-button>
-              </a>
-            </div>
-            <div class="icon">
-              <a href="https://www.pinterest.com/ecosodl/" target="_blank">
-                <paper-button id="pinterest" aria-label="pinterest" noink="">
-                  <iron-icon
-                    icon="haxthemeicons:pinterest"
-                    role="img"
-                  ></iron-icon>
-                </paper-button>
-              </a>
-            </div>
-            <div class="icon">
-              <a href="https://www.flickr.com/photos/ecosodl" target="_blank">
-                <paper-button id="flikr" aria-label="flikr" noink="">
-                  <iron-icon icon="haxthemeicons:flikr" role="img"></iron-icon>
-                </paper-button>
+              <a
+                class="social-link"
+                href="https://twitter.com/Eberly_ODL"
+                target="_blank"
+                rel="noopener"
+                aria-label="Twitter"
+              >
+                <simple-icon-lite
+                  icon="haxthemeicons:twitter"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
               </a>
             </div>
             <div class="icon">
               <a
-                href="https://www.youtube.com/user/EberlySciOnline"
+                class="social-link"
+                href="https://vimeo.com/user38447507"
                 target="_blank"
+                rel="noopener"
+                aria-label="Vimeo"
               >
-                <paper-button id="youtube" aria-label="youtube" noink="">
-                  <iron-icon
-                    icon="haxthemeicons:youtube"
-                    role="img"
-                  ></iron-icon>
-                </paper-button>
+                <simple-icon-lite
+                  icon="haxthemeicons:vimeo"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
               </a>
             </div>
             <div class="icon">
-              <a href="mailto:odl@science.psu.edu" target="_blank">
-                <paper-button id="email" aria-label="email" noink="">
-                  <iron-icon icon="haxthemeicons:email" role="img"></iron-icon>
-                </paper-button>
+              <a
+                class="social-link"
+                href="https://www.pinterest.com/ecosodl/"
+                target="_blank"
+                rel="noopener"
+                aria-label="Pinterest"
+              >
+                <simple-icon-lite
+                  icon="haxthemeicons:pinterest"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
+              </a>
+            </div>
+            <div class="icon">
+              <a
+                class="social-link"
+                href="https://www.flickr.com/photos/ecosodl"
+                target="_blank"
+                rel="noopener"
+                aria-label="Flickr"
+              >
+                <simple-icon-lite
+                  icon="haxthemeicons:flikr"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
+              </a>
+            </div>
+            <div class="icon">
+              <a
+                class="social-link"
+                href="https://www.youtube.com/user/EberlySciOnline"
+                target="_blank"
+                rel="noopener"
+                aria-label="YouTube"
+              >
+                <simple-icon-lite
+                  icon="haxthemeicons:youtube"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
+              </a>
+            </div>
+            <div class="icon">
+              <a
+                class="social-link"
+                href="mailto:odl@science.psu.edu"
+                target="_blank"
+                rel="noopener"
+                aria-label="Email"
+              >
+                <simple-icon-lite
+                  icon="haxthemeicons:email"
+                  role="img"
+                  aria-hidden="true"
+                ></simple-icon-lite>
               </a>
             </div>
           </div>
@@ -288,16 +346,23 @@ class PageFooter extends PolymerElement {
                 <a
                   href="https://www.psu.edu/web-privacy-statement"
                   target="_blank"
+                  rel="noopener"
                   >Privacy</a
                 >
               </div>
               <div class="legal_item">
-                <a href="https://policy.psu.edu/policies" target="_blank"
+                <a
+                  href="https://policy.psu.edu/policies"
+                  target="_blank"
+                  rel="noopener"
                   >Non Discrimination</a
                 >
               </div>
               <div class="legal_item">
-                <a href="https://policy.psu.edu/policies" target="_blank"
+                <a
+                  href="https://policy.psu.edu/policies"
+                  target="_blank"
+                  rel="noopener"
                   >Equal Opportunity</a
                 >
               </div>
@@ -305,6 +370,7 @@ class PageFooter extends PolymerElement {
                 <a
                   href="https://www.psu.edu/accessibilitystatement"
                   target="_blank"
+                  rel="noopener"
                   >Accessibility</a
                 >
               </div>
@@ -312,6 +378,7 @@ class PageFooter extends PolymerElement {
                 <a
                   href="https://www.psu.edu/copyright-information"
                   target="_blank"
+                  rel="noopener"
                   >Copyright</a
                 >
               </div>
@@ -319,26 +386,17 @@ class PageFooter extends PolymerElement {
           </div>
           <div id="odl_mark">
             <a href="http://odl.science.psu.edu">
-              <iron-image
-                style="width:60px; height:60px;"
+              <img
+                class="odl-mark-img"
                 alt="Office of Digital Learning, Eberly College of Science"
-                sizing="cover"
                 src="files/theme-images/logos/odl-logo.png"
-              ></iron-image>
+              />
             </a>
           </div>
         </div>
       </div>
     `;
   }
-  static get tag() {
-    return "page-footer";
-  }
-  constructor() {
-    super();
-    import("@polymer/paper-button/paper-button.js");
-    import("@polymer/iron-icon/iron-icon.js");
-  }
 }
-window.customElements.define(PageFooter.tag, PageFooter);
+globalThis.customElements.define(PageFooter.tag, PageFooter);
 export { PageFooter };

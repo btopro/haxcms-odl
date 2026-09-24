@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
+import { LitElement, html, css } from "lit";
 
 class LinkPreview extends LitElement {
   static get styles() {
@@ -85,14 +85,15 @@ class LinkPreview extends LitElement {
           }
         }
 
-        #card_image iron-image {
+        #card_image img {
           height: 170px;
           width: 225px;
           margin-right: 15px;
+          object-fit: cover;
         }
 
         @media screen and (max-width: 768px) {
-          #card_image iron-image {
+          #card_image img {
             width: 100%;
           }
         }
@@ -107,15 +108,17 @@ class LinkPreview extends LitElement {
             margin: 5px 0 0;
           }
         }
-      `
+      `,
     ];
   }
   render() {
     return html`
-      <a href="${this.url}" target="_blank">
+      <a href="${this.url}" target="_blank" rel="noopener noreferrer">
         <div id="link_wrap">
           <div id="card_image">
-            <iron-image sizing="cover" src="${this.image}"></iron-image>
+            ${this.image
+              ? html`<img src="${this.image}" alt="" />`
+              : html``}
           </div>
           <div id="card_info">
             <div id="card_title">
@@ -139,20 +142,22 @@ class LinkPreview extends LitElement {
        * Image source
        */
       image: {
-        type: String
+        type: String,
       },
       title: {
-        type: String
+        type: String,
       },
       url: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
   constructor() {
     super();
-    import("@polymer/iron-image/iron-image.js");
+    this.image = "";
+    this.title = "";
+    this.url = "";
   }
 }
-window.customElements.define(LinkPreview.tag, LinkPreview);
+globalThis.customElements.define(LinkPreview.tag, LinkPreview);
 export { LinkPreview };

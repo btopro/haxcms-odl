@@ -1,7 +1,10 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import { ImaginaryMixin } from "./ImaginaryMixin.js"
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+import "@haxtheweb/simple-icon/lib/simple-icons.js";
+import { ImaginaryMixin } from "./ImaginaryMixin.js";
 
-class NewsCard extends ImaginaryMixin(LitElement) {
+class NewsCard extends ImaginaryMixin(DDD) {
   static get styles() {
     return [
       css`
@@ -18,15 +21,15 @@ class NewsCard extends ImaginaryMixin(LitElement) {
         }
 
         h1 {
-          font-size: 28px;
-          font-weight: 400;
+          font-size: var(--ddd-font-size-l, 28px);
+          font-weight: var(--ddd-font-weight-regular, 400);
           line-height: 1.2;
           margin: 0;
         }
 
         @media screen and (max-width: 1124px) {
           h1 {
-            font-size: 24px;
+            font-size: var(--ddd-font-size-m, 24px);
           }
         }
 
@@ -36,17 +39,17 @@ class NewsCard extends ImaginaryMixin(LitElement) {
 
         h2 {
           color: var(--theme-color-1);
-          font-size: 18px;
-          font-weight: 400;
+          font-size: var(--ddd-font-size-s, 18px);
+          font-weight: var(--ddd-font-weight-regular, 400);
           margin: 0;
         }
 
         #news_wrap {
           display: flex;
           background-color: var(--theme-color-4);
-          margin: 15px;
-          padding: 0 0 10px 0;
-          border-bottom: solid 2px #dcdcdc;
+          margin: var(--ddd-spacing-4, 15px);
+          padding: 0 0 var(--ddd-spacing-3, 10px) 0;
+          border-bottom: solid 2px light-dark(#dcdcdc, #555);
         }
 
         @media screen and (max-width: 1124px) {
@@ -71,7 +74,7 @@ class NewsCard extends ImaginaryMixin(LitElement) {
           background-position: center;
           width: 175px;
           height: 250px;
-          margin: 0 15px 0 0;
+          margin: 0 var(--ddd-spacing-4, 15px) 0 0;
         }
 
         @media screen and (max-width: 1124px) {
@@ -83,19 +86,19 @@ class NewsCard extends ImaginaryMixin(LitElement) {
 
         #header_info {
           border-left: solid 4px var(--theme-color-2);
-          padding: 0 0 0 15px;
+          padding: 0 0 0 var(--ddd-spacing-4, 15px);
         }
 
         @media screen and (max-width: 1124px) {
           #header_info {
-            margin: 15px 0 0 0;
+            margin: var(--ddd-spacing-4, 15px) 0 0 0;
           }
         }
 
         #author_info {
           display: flex;
           align-items: center;
-          margin: 5px 0 5px;
+          margin: var(--ddd-spacing-1, 5px) 0 var(--ddd-spacing-1, 5px);
         }
 
         #author_image {
@@ -105,7 +108,7 @@ class NewsCard extends ImaginaryMixin(LitElement) {
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          margin: 0 5px 0 0;
+          margin: 0 var(--ddd-spacing-1, 5px) 0 0;
         }
 
         #author a {
@@ -118,54 +121,69 @@ class NewsCard extends ImaginaryMixin(LitElement) {
         }
 
         #description {
-          margin-top: 10px;
-          font-size: 18px;
-          font-weight: 300;
+          margin-top: var(--ddd-spacing-3, 10px);
+          font-size: var(--ddd-font-size-s, 18px);
+          font-weight: var(--ddd-font-weight-light, 300);
           line-height: 1.2;
         }
 
         @media screen and (max-width: 1124px) {
           #description {
-            margin-top: 10px;
+            margin-top: var(--ddd-spacing-3, 10px);
           }
         }
 
         #action_button {
           display: flex;
           justify-content: flex-end;
-          margin: 20px 0 0 0;
+          margin: var(--ddd-spacing-5, 20px) 0 0 0;
         }
 
         @media screen and (max-width: 768px) {
           #action_button {
             justify-content: center;
-            margin: 15px 0 0 0;
+            margin: var(--ddd-spacing-4, 15px) 0 0 0;
           }
         }
 
-        paper-button#action {
+        a#action {
+          display: inline-flex;
+          align-items: center;
           color: var(--theme-color-2);
-          padding: 0;
+          text-decoration: none;
+          font-size: var(--ddd-font-size-s, 16px);
         }
 
-        paper-button#action:hover,
-        paper-button#action:focus {
+        a#action:hover,
+        a#action:focus {
           color: var(--theme-color-1);
         }
-      `
+
+        a#action .title {
+          margin-right: var(--ddd-spacing-1, 4px);
+        }
+
+        simple-icon-lite {
+          --simple-icon-height: var(--ddd-icon-size-sm, 16px);
+          --simple-icon-width: var(--ddd-icon-size-sm, 16px);
+        }
+      `,
     ];
   }
   render() {
-    // notes:
-    // http://haxcms-odl.haxcms/sites/haxcms-odl/files/blog-images/2-10-20.jpg?imaginary&width=200&height=500&gravity=smart&operation=crop
-    // utilize the imaginary image server
-    let imageResized = this.imaginaryGenerateUrl(this.image, 'smartcrop', [ "width=450", "height=600", "quality=75", "type=jpeg" ]);
+    let imageResized = this.imaginaryGenerateUrl(this.image, "smartcrop", [
+      "width=450",
+      "height=600",
+      "quality=75",
+      "type=jpeg",
+    ]);
     return html`
       <div id="news_wrap">
         <div
           id="news_image"
-          style="background-image:url(${imageResized})"
-          alt="${this.alt}"
+          role="img"
+          aria-label=${this.alt}
+          style=${`background-image:url(${imageResized})`}
         ></div>
         <div id="content_wrap">
           <div id="header_info">
@@ -180,7 +198,9 @@ class NewsCard extends ImaginaryMixin(LitElement) {
             <div id="author_info">
               <div
                 id="author_image"
-                style="background-image:url(${this.authorimage})"
+                role="img"
+                aria-label=${this.author}
+                style=${`background-image:url(${this.authorimage})`}
               ></div>
               <div id="author">By: ${this.author}</div>
             </div>
@@ -189,11 +209,9 @@ class NewsCard extends ImaginaryMixin(LitElement) {
             <span>${this.description}</span>
           </div>
           <div id="action_button">
-            <a href="${this.url}">
-              <paper-button noink id="action">
-                <div class="title">Read More</div>
-                <iron-icon icon="chevron-right"></iron-icon>
-              </paper-button>
+            <a href="${this.url}" id="action">
+              <span class="title">Read More</span>
+              <simple-icon-lite icon="chevron-right"></simple-icon-lite>
             </a>
           </div>
         </div>
@@ -209,62 +227,58 @@ class NewsCard extends ImaginaryMixin(LitElement) {
        * Image
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Image Alt Text
        */
       alt: {
-        type: String
+        type: String,
       },
       /**
        * Title
        */
       title: {
-        type: String
+        type: String,
       },
       /**
        * Date
        */
       date: {
-        type: String
+        type: String,
       },
       /**
        * Author Image
        */
       authorimage: {
-        type: String
+        type: String,
       },
       /**
        * Author
        */
       author: {
-        type: String
+        type: String,
       },
       /**
        * Author Page
        */
       authorpage: {
-        type: String
+        type: String,
       },
       /**
        * Article Description
        */
       description: {
-        type: String
+        type: String,
       },
       /**
        * Destination Url
        */
       url: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
-  constructor() {
-    super();
-    import("@polymer/paper-button/paper-button.js");
-  }
 }
-window.customElements.define(NewsCard.tag, NewsCard);
+globalThis.customElements.define(NewsCard.tag, NewsCard);
 export { NewsCard };

@@ -1,7 +1,11 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-class AlertMessage extends LitElement {
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+
+class AlertMessage extends DDD {
   static get styles() {
     return [
+      super.styles,
       css`
         a {
           color: #fff;
@@ -10,7 +14,7 @@ class AlertMessage extends LitElement {
 
         @media screen and (max-width: 768px) {
           a {
-            font-size: 14px;
+            font-size: var(--ddd-font-size-xs);
           }
         }
 
@@ -20,22 +24,23 @@ class AlertMessage extends LitElement {
 
         #container {
           background-color: red;
-          padding: 8px;
+          padding: var(--ddd-spacing-2);
         }
 
-        iron-icon {
-          width: 25px;
-          height: 25px;
+        simple-icon-lite {
+          width: var(--ddd-icon-size-sm);
+          height: var(--ddd-icon-size-sm);
           color: #fff;
-          margin-right: 5px;
+          margin-right: var(--ddd-spacing-1);
+          vertical-align: middle;
         }
       `
     ];
   }
   render() {
     return html`
-      <div id="container">
-        <iron-icon icon="icons:report-problem"></iron-icon>
+      <div id="container" role="alert">
+        <simple-icon-lite icon="icons:report-problem"></simple-icon-lite>
         <a href="${this.url}">
           <slot></slot>
         </a>
@@ -48,6 +53,7 @@ class AlertMessage extends LitElement {
   }
   static get properties() {
     return {
+      ...super.properties,
       /**
        * URL for alert
        */
@@ -61,5 +67,5 @@ class AlertMessage extends LitElement {
     this.url = "";
   }
 }
-window.customElements.define(AlertMessage.tag, AlertMessage);
+globalThis.customElements.define(AlertMessage.tag, AlertMessage);
 export { AlertMessage };

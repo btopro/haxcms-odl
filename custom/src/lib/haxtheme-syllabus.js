@@ -1,80 +1,110 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
+import "@haxtheweb/haxcms-elements/lib/ui-components/navigation/site-breadcrumb.js";
 import "./page-banner.js";
-import "./worksheet-download";
+import "./worksheet-download.js";
 
-class HaxThemeSyllabus extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class HaxThemeSyllabus extends DDD {
+  static get tag() {
+    return "haxtheme-syllabus";
+  }
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      activeItem: { type: Object },
+      manifest: { type: Object },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.activeItem = null;
+    this.__disposer = [];
+    autorun((reaction) => {
+      this.editMode = toJS(store.editMode);
+      this.__disposer.push(reaction);
+    });
+    autorun((reaction) => {
+      this.manifest = toJS(store.routerManifest);
+      this.__disposer.push(reaction);
+    });
+    autorun((reaction) => {
+      this.activeItem = toJS(store.activeItem);
+      this.__disposer.push(reaction);
+    });
+  }
+
+  disconnectedCallback() {
+    for (var i in this.__disposer) {
+      this.__disposer[i].dispose();
+    }
+    super.disconnectedCallback();
+  }
+
+  static get styles() {
+    return [
+      super.styles || [],
+      css`
         :host {
           display: block;
         }
-        /**
-       * Hide the slotted content during edit mode. This must be here to work.
-       */
         :host([edit-mode]) #slot {
           display: none;
         }
         a {
           color: var(--odl-haxtheme-accent-color-2);
           text-decoration: var(--haxtheme-syllabus-a-text-decoration);
-          @apply --haxtheme-syllabus-a;
         }
-
         h2 {
           margin: var(--haxtheme-syllabus-h2-margin, 0);
           font-weight: var(--haxtheme-syllabus-h2-font-weight);
           font-size: var(--haxtheme-syllabus-h2-font-size);
-          @apply --haxtheme-syllabus-h2;
         }
-
         h3 {
           margin: var(--haxtheme-syllabus-h3-margin, 0);
           font-weight: var(--haxtheme-syllabus-h3-font-weight);
           font-size: var(--haxtheme-syllabus-h3-font-size);
-          @apply --haxtheme-syllabus-h3;
         }
-
         #contentcontainer {
           font-size: var(--haxtheme-syllabus-contentcontainer-font-size);
           font-weight: var(--haxtheme-syllabus-contentcontainer-font-weight);
           line-height: var(--haxtheme-syllabus-contentcontainer-line-height);
-          @apply --haxtheme-syllabus-contentcontainer;
         }
-
         #syllabus_header {
           border-left: var(--haxtheme-syllabus-header-border-left);
-          border-left-width: var(--haxtheme-syllabus-header-border-left-width);
+          border-left-width: var(
+            --haxtheme-syllabus-header-border-left-width
+          );
           border-left-color: var(--haxtheme-syllabus-accent-color);
           padding-left: var(--haxtheme-syllabus-header-padding-left, 15px);
-          @apply --haxtheme-syllabus-header;
         }
-
         #syllabus_title h1 {
-          text-transform: var(--haxtheme-syllabus-syllabus-title-h1, uppercase);
+          text-transform: var(
+            --haxtheme-syllabus-syllabus-title-h1,
+            uppercase
+          );
           margin: var(--haxtheme-syllabus-syllabus-title-h1-margin, 25px 0 0);
-          font-weight: var(--haxtheme-syllabus-syllabus-title-h1-font-weight);
-          @apply --haxtheme-syllabus-syllabus-title-h1;
+          font-weight: var(
+            --haxtheme-syllabus-syllabus-title-h1-font-weight
+          );
         }
-
         .policy h2 {
           margin: var(--haxtheme-syllabus-policy-h2-margin, 5px 0 5px);
           font-weight: var(--haxtheme-syllabus-policy-h2-font-weight, 400);
           font-size: var(--haxtheme-syllabus-policy-h2-font-size, 24px);
           color: var(--haxtheme-syllabus-policy-h2-color);
-          @apply --haxtheme-syllabus-policy-h2;
         }
-
         .policy {
           margin: var(--haxtheme-syllabus-policy-margin, 20px 0 20px);
           font-size: var(--haxtheme-syllabus-policy-font-size);
           font-weight: var(--haxtheme-syllabus-policy-font-weight);
           line-height: var(--haxtheme-syllabus-policy-line-height);
-          @apply --haxtheme-syllabus-policy;
         }
-
         #share_actions {
           display: var(--haxtheme-syllabus-share-actions-display, flex);
           justify-content: var(
@@ -82,59 +112,60 @@ class HaxThemeSyllabus extends PolymerElement {
             flex-end
           );
           margin: var(--haxtheme-syllabus-share-actions-margin-top, -20px);
-          @apply --haxtheme-syllabus-share-actions;
         }
-
         #syllabus_wrap {
           background: url(files/theme-images/syllabus/syllabus-watermark2.png);
           background-repeat: no-repeat;
           background-position: center;
           background-size: 100%;
           width: var(--haxtheme-syllabus-syllabus-wrap-width, 75%);
-          margin: var(--haxtheme-syllabus-syllabus-wrap-margin, 0 auto 0 auto);
-          @apply --haxtheme-syllabus-syllabus-wrap;
+          margin: var(
+            --haxtheme-syllabus-syllabus-wrap-margin,
+            0 auto 0 auto
+          );
         }
-
         @media screen and (max-width: 768px) {
           #syllabus_wrap {
             width: var(--haxtheme-syllabus-syllabus-wrap-width-mobile, 90%);
-            @apply --haxtheme-syllabus-syllabus-wrap-mobile;
           }
         }
-
         page-banner {
           --page-banner-text-transform: uppercase;
         }
-
         site-breadcrumb {
           margin: var(--haxtheme-syllabus-site-breadcrumb-margin);
         }
-
         worksheet-download {
           margin: 0 0 25px 0;
         }
-      </style>
+      `,
+    ];
+  }
+
+  render() {
+    const activeItem = this.activeItem;
+    const metadata =
+      activeItem && activeItem.metadata ? activeItem.metadata : {};
+    const fields = metadata && metadata.fields ? metadata.fields : {};
+    return html`
       <page-banner
-        image="[[activeItem.metadata.fields.image]]"
-        text="[[activeItem.title]]"
-        alt="[[activeItem.metadata.fields.imageAlt]]"
+        image="${fields.image || ""}"
+        text="${activeItem ? activeItem.title : ""}"
+        alt="${fields.imageAlt || ""}"
       ></page-banner>
       <div id="syllabus_wrap">
         <site-breadcrumb></site-breadcrumb>
         <div id="syllabus_header">
           <div id="syllabus_title">
-            <h1>[[activeItem.title]]</h1>
+            <h1>${activeItem ? activeItem.title : ""}</h1>
           </div>
           <div id="syllabus_subtitle">
-            <h2>[[activeItem.metadata.fields.name]]</h2>
+            <h2>${fields.name || ""}</h2>
           </div>
           <div id="syllabus_sample">
             <h3>Sample Syllabus</h3>
           </div>
         </div>
-        <!-- <div id="share_actions">
-          <site-print-button></site-print-button>
-        </div> -->
         <div id="syllabus">
           <div id="contentcontainer">
             <div id="slot">
@@ -151,9 +182,9 @@ class HaxThemeSyllabus extends PolymerElement {
               guiding principle for all academic activity at The Pennsylvania
               State University, and all members of the University community are
               expected to act in accordance with this principle. Consistent with
-              this expectation, the University’s Code of Conduct states that all
+              this expectation, the University's Code of Conduct states that all
               students should act with personal integrity, respect other
-              students’ dignity, rights and property, and help create and
+              students' dignity, rights and property, and help create and
               maintain an environment in which all can succeed through the
               fruits of their efforts.
             </div>
@@ -171,7 +202,7 @@ class HaxThemeSyllabus extends PolymerElement {
             <h2>Accommodating Disabilities</h2>
             <div>
               Penn State welcomes students with disabilities into the
-              University’s educational programs. Every Penn State campus has an
+              University's educational programs. Every Penn State campus has an
               office for students with disabilities. The
               <a
                 href="http://equity.psu.edu/sdr/disability-coordinator"
@@ -197,7 +228,6 @@ class HaxThemeSyllabus extends PolymerElement {
               early as possible. You must follow this process for every semester
               that you request accommodations.
             </div>
-
             <div class="policy">
               <h2>Counseling and Psychological Services</h2>
               <div>
@@ -209,7 +239,7 @@ class HaxThemeSyllabus extends PolymerElement {
                 counseling, crisis intervention, consultations, online chats,
                 and mental health screenings. These services are provided by
                 staff who welcome all students and embrace a philosophy
-                respectful of clients’ cultural and religious backgrounds, and
+                respectful of clients' cultural and religious backgrounds, and
                 sensitive to differences in race, ability, gender identity and
                 sexual orientation.
               </div>
@@ -259,36 +289,11 @@ class HaxThemeSyllabus extends PolymerElement {
         </div>
         <worksheet-download
           title="Download Sample"
-          link="[[activeItem.metadata.fields.pdf]]"
+          link="${fields.pdf || ""}"
         ></worksheet-download>
       </div>
     `;
   }
-  static get tag() {
-    return "haxtheme-syllabus";
-  }
-
-  constructor() {
-    super();
-    import("@lrnwebcomponents/haxcms-elements/lib/ui-components/navigation/site-breadcrumb.js");
-    import("@lrnwebcomponents/haxcms-elements/lib/ui-components/site/site-print-button.js");
-    import("@polymer/iron-image/iron-image.js");
-    this.__disposer = [];
-    autorun((reaction) => {
-      this.manifest = toJS(store.routerManifest);
-      this.__disposer.push(reaction);
-    });
-    autorun((reaction) => {
-      this.activeItem = toJS(store.activeItem);
-      this.__disposer.push(reaction);
-    });
-  }
-  disconnectedCallback() {
-    for (var i in this.__disposer) {
-      this.__disposer[i].dispose();
-    }
-    super.disconnectedCallback();
-  }
 }
-window.customElements.define(HaxThemeSyllabus.tag, HaxThemeSyllabus);
+globalThis.customElements.define(HaxThemeSyllabus.tag, HaxThemeSyllabus);
 export { HaxThemeSyllabus };

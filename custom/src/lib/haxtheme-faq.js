@@ -1,23 +1,27 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
 
-class HaxthemeFaq extends LitElement {
-  static get properties() {
-    return {
-      activeItem: { type: Object }
-    }
-  }
-
+class HaxthemeFaq extends DDD {
   static get tag() {
     return "haxtheme-faq";
   }
 
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      activeItem: { type: Object },
+    };
+  }
+
   constructor() {
     super();
+    this.editMode = false;
     this.activeItem = null;
     this.__disposer = [];
-    autorun(reaction => {
+    autorun((reaction) => {
       this.activeItem = toJS(store.activeItem);
       this.__disposer.push(reaction);
     });
@@ -32,20 +36,16 @@ class HaxthemeFaq extends LitElement {
 
   static get styles() {
     return [
+      super.styles || [],
       css`
         :host {
           display: flex;
           flex: 1 1 auto;
           flex-direction: column;
         }
-
-       /**
-        * Hide the slotted content during edit mode. This must be here to work.
-        */
         :host([edit-mode]) #slot {
           display: none;
         }
-
         #container {
           display: block;
           padding: 1em;
@@ -53,7 +53,7 @@ class HaxthemeFaq extends LitElement {
           width: 100%;
           margin: 0 auto;
         }
-      `
+      `,
     ];
   }
 
@@ -70,5 +70,5 @@ class HaxthemeFaq extends LitElement {
     `;
   }
 }
-window.customElements.define(HaxthemeFaq.tag, HaxthemeFaq);
+globalThis.customElements.define(HaxthemeFaq.tag, HaxthemeFaq);
 export { HaxthemeFaq };

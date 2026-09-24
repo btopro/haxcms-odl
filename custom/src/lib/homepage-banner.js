@@ -1,8 +1,10 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-class HomePageBanner extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+
+class HomePageBanner extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
         }
@@ -37,7 +39,6 @@ class HomePageBanner extends PolymerElement {
           flex: var(--haxtheme-homepage-banner-image-wrap-flex, 1 1 auto);
           margin: var(--haxtheme-homepage-banner-image-wrap-margin, 0);
           padding: var(--haxtheme-homepage-banner-image-wrap-padding, 0);
-          @apply --haxtheme-homepage-banner-image-wrap;
         }
 
         @media screen and (max-width: 700px) {
@@ -46,7 +47,6 @@ class HomePageBanner extends PolymerElement {
               --haxtheme-homepage-banner-image-wrap-height-mobile,
               55vw
             );
-            @apply --haxtheme-homepage-banner-image-wrap-mobile;
           }
         }
 
@@ -61,7 +61,6 @@ class HomePageBanner extends PolymerElement {
           );
           margin: var(--haxtheme-homepage-banner-image-text-margin, 0 5vw);
           padding: var(--haxtheme-homepage-banner-image-text-padding, 2vw);
-          @apply --haxtheme-homepage-banner-image-text;
         }
 
         .image_text h1 {
@@ -80,11 +79,13 @@ class HomePageBanner extends PolymerElement {
           margin: var(--haxtheme-homepage-banner-image-text-h1-margin, 0);
           padding: var(--haxtheme-homepage-banner-image-text-h1-padding, 0);
           width: var(--haxtheme-homepage-banner-image-text-h1-width, 100%);
-          @apply --haxtheme-homepage-banner-image-text-h1;
         }
 
         .branding_wrap {
-          display: var(--haxtheme-homepage-banner-branding-wrap-display, flex);
+          display: var(
+            --haxtheme-homepage-banner-branding-wrap-display,
+            flex
+          );
           align-items: var(
             --haxtheme-homepage-banner-branding-wrap-align-items,
             center
@@ -103,13 +104,11 @@ class HomePageBanner extends PolymerElement {
           border-top-color: var(
             --haxtheme-homepage-banner-branding-wrap-border-top-color
           );
-          @apply --haxtheme-homepage-banner-branding-wrap;
         }
-        
+
         .logo {
           position: var(--haxtheme-homepage-banner-logo-position, absolute);
           width: var(--haxtheme-homepage-banner-logo-width, 40%);
-          @apply --haxtheme-homepage-banner-logo;
         }
 
         .logo img {
@@ -119,7 +118,9 @@ class HomePageBanner extends PolymerElement {
             --haxtheme-homepage-banner-logo-image-border-width,
             4px
           );
-          border-color: var(--haxtheme-homepage-banner-logo-image-border-color);
+          border-color: var(
+            --haxtheme-homepage-banner-logo-image-border-color
+          );
           border-radius: var(
             --haxtheme-homepage-banner-logo-image-border-radius,
             50%
@@ -131,7 +132,6 @@ class HomePageBanner extends PolymerElement {
             --haxtheme-homepage-banner-logo-image-margin,
             -52px 0 0 25px
           );
-          @apply --haxtheme-homepage-banner-logo-image;
         }
 
         @media screen and (max-width: 700px) {
@@ -146,7 +146,6 @@ class HomePageBanner extends PolymerElement {
             --haxtheme-homepage-banner-company-name-margin,
             0 0 0 auto
           );
-          @apply --haxtheme-homepage-banner-company-name;
         }
 
         .company_name h2 {
@@ -163,14 +162,22 @@ class HomePageBanner extends PolymerElement {
             --haxtheme-homepage-banner-company-name-h2-margin,
             5px 0 5px 0
           );
-          @apply --haxtheme-homepage-banner-company-name-h2;
         }
-      </style>
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="banner_wrap">
-        <div class="image_wrap" style$="background-image:url([[image]])">
+        <div
+          class="image_wrap"
+          role="img"
+          aria-label=${this.alt}
+          style=${`background-image:url(${this.image})`}
+        >
           <div class="image"></div>
           <div class="image_text">
-            <h1>[[text]]</h1>
+            <h1>${this.text}</h1>
           </div>
         </div>
         <div class="branding_wrap">
@@ -196,22 +203,22 @@ class HomePageBanner extends PolymerElement {
        * Image source
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Alt text for image
        */
       alt: {
-        type: String
+        type: String,
       },
       /**
        * Text over image
        */
       text: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
 }
-window.customElements.define(HomePageBanner.tag, HomePageBanner);
+globalThis.customElements.define(HomePageBanner.tag, HomePageBanner);
 export { HomePageBanner };

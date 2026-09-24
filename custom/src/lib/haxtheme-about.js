@@ -1,21 +1,59 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
 import "./page-banner.js";
-class HaxThemeAbout extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+
+class HaxThemeAbout extends DDD {
+  static get tag() {
+    return "haxtheme-about";
+  }
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      manifest: { type: Object },
+      activeItem: { type: Object },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.activeItem = null;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.__disposer = [];
+    autorun((reaction) => {
+      this.manifest = toJS(store.routerManifest);
+      this.__disposer.push(reaction);
+    });
+    autorun((reaction) => {
+      this.activeItem = toJS(store.activeItem);
+      this.__disposer.push(reaction);
+    });
+  }
+
+  disconnectedCallback() {
+    for (var i in this.__disposer) {
+      this.__disposer[i].dispose();
+    }
+    super.disconnectedCallback();
+  }
+
+  static get styles() {
+    return [
+      super.styles || [],
+      css`
         :host {
           display: block;
         }
-        /**
-       * Hide the slotted content during edit mode. This must be here to work.
-       */
         :host([edit-mode]) #slot {
           display: none;
         }
-
         h1 {
           font-size: 36px;
           font-weight: 400;
@@ -24,20 +62,31 @@ class HaxThemeAbout extends PolymerElement {
           width: 80%;
           margin: 0 auto 0 auto;
         }
-
         #contentcontainer {
           font-size: 18px;
           font-weight: 300;
           line-height: 1.4;
         }
-
         #about_header {
           border-left: solid;
           border-left-width: 4px;
-          border-left-color:  #e2801e;
+          border-left-color: #e2801e;
           padding-left: 15px;
         }
-      </style>
+        body.dark-mode #about_header {
+          border-left-color: light-dark(#e2801e, #f5a13d);
+        }
+        @media (prefers-color-scheme: dark) {
+          #about_header {
+            border-left-color: #f5a13d;
+          }
+        }
+      `,
+    ];
+  }
+
+  render() {
+    return html`
       <page-banner
         image="files/theme-images/page-banners/about-banner.jpg"
         text="About"
@@ -57,27 +106,6 @@ class HaxThemeAbout extends PolymerElement {
       </div>
     `;
   }
-  static get tag() {
-    return "haxtheme-about";
-  }
-  connectedCallback() {
-    super.connectedCallback();
-    this.__disposer = [];
-    autorun(reaction => {
-      this.manifest = toJS(store.routerManifest);
-      this.__disposer.push(reaction);
-    });
-    autorun(reaction => {
-      this.activeItem = toJS(store.activeItem);
-      this.__disposer.push(reaction);
-    });
-  }
-  disconnectedCallback() {
-    for (var i in this.__disposer) {
-      this.__disposer[i].dispose();
-    }
-    super.disconnectedCallback();
-  }
 }
-window.customElements.define(HaxThemeAbout.tag, HaxThemeAbout);
+globalThis.customElements.define(HaxThemeAbout.tag, HaxThemeAbout);
 export { HaxThemeAbout };

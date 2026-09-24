@@ -1,29 +1,58 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import "@lrnwebcomponents/haxcms-elements/lib/ui-components/query/site-query.js";
-import "@polymer/polymer/lib/elements/dom-repeat.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
+import "@haxtheweb/haxcms-elements/lib/ui-components/query/site-query.js";
 import "./page-banner.js";
 import "./team-card.js";
-class HaxThemeTeam extends PolymerElement {
+
+class HaxThemeTeam extends DDD {
   static get tag() {
     return "haxtheme-team";
   }
-  static get template() {
-    return html`
-      <style>
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      __items: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.__items = [];
+    this.__itemsChanged = this.__itemsChanged.bind(this);
+    // Stable conditions object to avoid site-query re-query loop on re-render.
+    this.__teamConditions = { "metadata.type": "team" };
+    this.__disposer = autorun(() => {
+      this.editMode = toJS(store.editMode);
+    });
+  }
+
+  disconnectedCallback() {
+    this.__disposer();
+    super.disconnectedCallback();
+  }
+
+  __itemsChanged(e) {
+    this.__items = e.detail.value;
+  }
+
+  static get styles() {
+    return [
+      super.styles || [],
+      css`
         :host {
           display: block;
         }
-        /**
-       * Hide the slotted content during edit mode. This must be here to work.
-       */
         :host([edit-mode]) #slot {
           display: none;
         }
         a {
           text-decoration: var(--haxtheme-team-a-text-decoration);
-          @apply --haxtheme-team-a;
         }
-
         #team_card {
           display: var(--haxtheme-team-team-card-display, grid);
           grid-template-columns: var(
@@ -36,54 +65,50 @@ class HaxThemeTeam extends PolymerElement {
           );
           margin: var(--haxtheme-team-team-card-margin, 25px 0 0 0);
           padding: var(--haxtheme-team-team-card-padding, 0 0 25px 0);
-          @apply --haxtheme-team-card;
         }
-
         @media screen and (max-width: 1000px) {
           #team_card {
             grid-template-columns: var(
               --haxtheme-team-team-card-grid-template-columns-mobile,
               repeat(2, auto [col-start])
             );
-            @apply --haxtheme-team-card-mobile;
           }
         }
-
         @media screen and (max-width: 768px) {
           #team_card {
             grid-template-columns: var(
               --haxtheme-team-team-card-grid-template-columns-mobile,
               repeat(1, auto [col-start])
             );
-            @apply --haxtheme-team-card-mobile;
           }
         }
-      </style>
+      `,
+    ];
+  }
+
+  render() {
+    return html`
       <site-query
-        result="{{__items}}"
-        conditions='{"metadata.type": "team"}'
-        sort
-      >
-      </site-query>
+        .conditions=${this.__teamConditions}
+        @result-changed=${this.__itemsChanged}
+      ></site-query>
       <page-banner
         image="files/theme-images/page-banners/team-banner.jpg"
         text="Team"
         alt="Office of Digital Learning Team"
-      >
-      </page-banner>
+      ></page-banner>
       <div id="team_card">
-        <dom-repeat items="[[__items]]" mutable-data>
-          <template>
+        ${this.__items.map(
+          (item) => html`
             <team-card
-              name="[[item.metadata.fields.name]]"
-              image="[[item.metadata.fields.image]]"
-              position="[[item.metadata.fields.jobTitle]]"
-              info="[[item.metadata.fields.info]]"
-              url="[[item.location]]"
-            >
-            </team-card>
-          </template>
-        </dom-repeat>
+              name=${item.metadata.fields.name}
+              image=${item.metadata.fields.image}
+              position=${item.metadata.fields.jobTitle}
+              info=${item.metadata.fields.info}
+              url=${item.slug}
+            ></team-card>
+          `,
+        )}
       </div>
       <div id="contentcontainer">
         <div id="slot">
@@ -93,5 +118,5 @@ class HaxThemeTeam extends PolymerElement {
     `;
   }
 }
-window.customElements.define(HaxThemeTeam.tag, HaxThemeTeam);
+globalThis.customElements.define(HaxThemeTeam.tag, HaxThemeTeam);
 export { HaxThemeTeam };

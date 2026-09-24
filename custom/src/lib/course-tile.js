@@ -1,29 +1,30 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 
-class CourseTile extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class CourseTile extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
         }
         a {
           text-decoration: none;
           text-transform: uppercase;
-          color: #000;
-          font-size: 12px;
+          color: light-dark(#000, #fff);
+          font-size: var(--ddd-font-size-3xs, 12px);
         }
 
         a:hover {
-          color: #fff;
+          color: var(--theme-color-4, #fff);
         }
-        
+
         #card_wrap {
           display: flex;
           align-items: center;
-          background-color: #dcdcdc;
+          background-color: light-dark(#dcdcdc, #363533);
         }
-        
+
         #card_wrap:hover {
           background-color: #e2801e;
         }
@@ -36,17 +37,22 @@ class CourseTile extends PolymerElement {
           height: 50px;
         }
         #course_name {
-          padding: 0 0 0 5px;
+          padding: 0 0 0 var(--ddd-spacing-1, 5px);
         }
-      </style>
-      <a href$="[[url]]">
+      `,
+    ];
+  }
+  render() {
+    return html`
+      <a href="${this.url}">
         <div id="card_wrap">
           <div
             id="course_image"
-            style$="background-image:url([[image]])"
-            alt="[[alt]]"
+            role="img"
+            aria-label="${this.alt || this.name}"
+            style=${`background-image:url(${this.image})`}
           ></div>
-          <div id="course_name">[[name]]</div>
+          <div id="course_name">${this.name}</div>
         </div>
       </a>
     `;
@@ -60,28 +66,28 @@ class CourseTile extends PolymerElement {
        * Course Image
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Image Alt Text
        */
       alt: {
-        type: String
+        type: String,
       },
       /**
        * Course Name
        */
       name: {
-        type: String
+        type: String,
       },
       /**
        * Course URL
        */
       url: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
 }
-window.customElements.define(CourseTile.tag, CourseTile);
+globalThis.customElements.define(CourseTile.tag, CourseTile);
 export { CourseTile };

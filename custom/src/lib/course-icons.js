@@ -1,10 +1,6 @@
-import "@polymer/iron-icon/iron-icon.js";
-import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
-var $_documentContainer = document.createElement("div");
-$_documentContainer.setAttribute("style", "display: none;");
+import { SimpleIconsetStore } from "@haxtheweb/simple-icon/lib/simple-iconset.js";
 
-$_documentContainer.innerHTML = `<iron-iconset-svg name="courseicons" size="100">
-  <svg>
+const iconsetSvg = `<svg xmlns="http://www.w3.org/2000/svg">
     <defs>
 		<g id="astro001">
 			<circle cx="49.24" cy="50.46" r="29.33" style="fill:none;stroke:#363533;stroke-miterlimit:10;stroke-width:5px" />
@@ -702,7 +698,18 @@ $_documentContainer.innerHTML = `<iron-iconset-svg name="courseicons" size="100"
 				<!-- Need new svg icon -->
 			</g>
 		</defs>
-	</svg>
-</iron-iconset-svg>`;
+</svg>`;
 
-document.head.appendChild($_documentContainer);
+const parser = new DOMParser();
+const doc = parser.parseFromString(iconsetSvg, "image/svg+xml");
+const groups = doc.querySelectorAll("g[id]");
+const icons = {};
+groups.forEach((g) => {
+  let viewBox = "0 0 100 100";
+  if (g.hasAttribute("viewBox")) {
+    viewBox = g.getAttribute("viewBox");
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${g.outerHTML}</svg>`;
+  icons[g.id] = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+});
+SimpleIconsetStore.registerIconset("courseicons", icons);

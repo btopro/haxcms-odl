@@ -1,50 +1,49 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import "./odl-faqs.js"
-import "./odl-faqs-item.js"
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "./odl-faqs.js";
+import "./odl-faqs-item.js";
 
-class HaxthemeFaqs extends LitElement {
+class HaxthemeFaqs extends DDD {
   static get tag() {
     return "haxtheme-faqs";
   }
 
   static get properties() {
     return {
-      faqs: { type: Array }
-    }
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      faqs: { type: Array },
+    };
   }
 
   constructor() {
     super();
+    this.editMode = false;
+    this.faqs = [];
   }
 
   static get styles() {
     return [
+      super.styles || [],
       css`
         :host {
           display: flex;
           flex: 1 1 auto;
           flex-direction: column;
         }
-
-       /**
-        * Hide the slotted content during edit mode. This must be here to work.
-        */
         :host([edit-mode]) #slot {
           display: none;
         }
-
         #container {
           display: block;
           padding: 1em;
           max-width: 900px;
           margin: 0 auto;
         }
-
         #search {
           max-width: 900px;
           margin: auto;
         }
-
         input {
           margin: auto;
           padding: 15px;
@@ -54,10 +53,10 @@ class HaxthemeFaqs extends LitElement {
           width: 100%;
           box-sizing: border-box;
           font-family: montserrat;
-          color: #2C3E50;
+          color: #2c3e50;
           font-size: 13px;
         }
-      `
+      `,
     ];
   }
 
@@ -77,5 +76,5 @@ class HaxthemeFaqs extends LitElement {
     `;
   }
 }
-window.customElements.define(HaxthemeFaqs.tag, HaxthemeFaqs);
+globalThis.customElements.define(HaxthemeFaqs.tag, HaxthemeFaqs);
 export { HaxthemeFaqs };

@@ -1,11 +1,17 @@
-import "@polymer/iron-icon/iron-icon.js";
-import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
-var $_documentContainer = document.createElement("div");
+import { SimpleIconsetStore } from "@haxtheweb/simple-icon/lib/simple-iconset.js";
+
+/**
+ * Service icons iconset — converted from iron-iconset-svg to SimpleIconsetStore.
+ * The original SVG sprite data is preserved verbatim below; we parse it
+ * programmatically, build data-URI SVGs for each icon, and register them
+ * under the "serviceicons" namespace so <simple-icon-lite icon="serviceicons:...">
+ * can resolve them.
+ */
+const $_documentContainer = globalThis.document.createElement("div");
 $_documentContainer.setAttribute("style", "display: none;");
 
 $_documentContainer.innerHTML = `
-    <iron-iconset-svg name="serviceicons" size="24">
-        <svg>
+    <svg>
           <defs>
             <g id="computer">
               <path d="M22 3.2c0-.663-.537-1.2-1.2-1.2h-17.6c-.663 0-1.2.537-1.2 1.2v11.8h20v-11.8zm-2 9.8h-16v-9h16v9zm2 3h-20c-.197.372-2 4.582-2 4.998 0 .522.418 1.002 1.002 1.002h21.996c.584 0 1.002-.48 1.002-1.002 0-.416-1.803-4.626-2-4.998zm-12.229 5l.467-1h3.523l.467 1h-4.457z"/>
@@ -197,6 +203,33 @@ $_documentContainer.innerHTML = `
       </g>
     </defs>
       </svg>
-    </iron-iconset-svg>`;
+`;
 
-document.head.appendChild($_documentContainer);
+/**
+ * Parse the SVG sprite, build a data-URI for each named icon, and register
+ * the "serviceicons" iconset with SimpleIconsetStore. Icons that define a
+ * nested <svg> with a custom viewBox use that viewBox; path-only icons use
+ * the default 0 0 24 24 viewBox. Duplicate ids keep the first definition
+ * (matching iron-iconset-svg querySelector behavior).
+ */
+const iconset = {};
+const svgEl = $_documentContainer.querySelector("svg");
+if (svgEl) {
+  svgEl.querySelectorAll("defs > g[id]").forEach((g) => {
+    const id = g.getAttribute("id");
+    if (!iconset[id]) {
+      const nestedSvg = g.querySelector("svg");
+      let viewBox, content;
+      if (nestedSvg) {
+        viewBox = nestedSvg.getAttribute("viewBox") || "0 0 24 24";
+        content = nestedSvg.innerHTML;
+      } else {
+        viewBox = "0 0 24 24";
+        content = g.innerHTML;
+      }
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">${content}</svg>`;
+      iconset[id] = `data:image/svg+xml,${encodeURIComponent(iconSvg)}`;
+    }
+  });
+}
+SimpleIconsetStore.registerIconset("serviceicons", iconset);

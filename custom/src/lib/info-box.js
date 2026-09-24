@@ -1,20 +1,22 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-class InfoBox extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+import "@haxtheweb/simple-icon/lib/simple-icons.js";
+
+class InfoBox extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
         }
         a {
           text-decoration: var(--haxtheme-info-box-a-text-decoration);
-          @apply --haxtheme-info-box-a;
         }
         h1 {
           font-size: var(--haxtheme-info-box-h1-font-size);
           font-weight: var(--haxtheme-info-box-h1-font-weight);
           margin: var(--haxtheme-info-box-h1-margin, -11px 0 0 0);
-          @apply --haxtheme-info-box-h1;
         }
         #box_wrap {
           display: var(--haxtheme-info-box-box-wrap-display, flex);
@@ -23,12 +25,11 @@ class InfoBox extends PolymerElement {
             column
           );
           align-items: var(--haxtheme-info-box-box-wrap-align-items, center);
-          @apply --haxtheme-info-box-box-wrap;
         }
 
         @media screen and (min-width: 1550px) {
           #box_wrap {
-           margin-top: 150px;
+            margin-top: 150px;
           }
         }
 
@@ -42,14 +43,12 @@ class InfoBox extends PolymerElement {
           );
           padding: var(--haxtheme-info-box-inner-wrap-padding, 0 0 0 15px);
           width: var(--haxtheme-info-box-inner-wrap-width, 85%);
-          @apply --haxtheme-info-box-inner-wrap;
         }
 
         .action_text {
           font-size: var(--haxtheme-info-box-action-text-font-size, 22px);
           font-weight: var(--haxtheme-info-box-action-text-font-weight);
           line-height: var(--haxtheme-info-box-action-text-line-height);
-          @apply --haxtheme-info-box-action-text;
         }
 
         @media screen and (max-width: 700px) {
@@ -59,41 +58,52 @@ class InfoBox extends PolymerElement {
               18px
             );
             width: var(--haxtheme-info-box-action-text-width-mobile, 90%);
-            @apply --haxtheme-info-box-action-text-mobile;
           }
         }
 
         .action_button {
           margin: var(--haxtheme-info-box-action-button-margin, 12px 0 0 0);
-          @apply --haxtheme-info-box-action-button;
         }
 
-        paper-button#learn {
+        a#learn {
+          display: inline-flex;
+          align-items: center;
           color: var(--haxtheme-info-box-paper-button-color);
-          @apply --haxtheme-info-box-paper-button;
+          font-size: var(--ddd-font-size-xs, 16px);
+          text-decoration: none;
         }
 
-        paper-button#learn:hover,
-        paper-button#learn:focus {
+        a#learn:hover,
+        a#learn:focus {
           color: var(--haxtheme-info-box-paper-button-color-active);
-          @apply --haxtheme-info-box-paper-button-active;
         }
-      </style>
+
+        a#learn .title {
+          margin-right: var(--ddd-spacing-1, 4px);
+        }
+
+        simple-icon-lite {
+          --simple-icon-height: var(--ddd-icon-size-sm, 16px);
+          --simple-icon-width: var(--ddd-icon-size-sm, 16px);
+        }
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="box_wrap">
         <div id="inner_wrap">
           <div class="action_title">
-            <h1>[[title]]</h1>
+            <h1>${this.title}</h1>
           </div>
           <div class="action_text">
             <slot name="action_text"></slot>
           </div>
         </div>
         <div class="action_button">
-          <a href\$="[[url]]">
-            <paper-button noink id="learn">
-              <div class="title">Learn More</div>
-              <iron-icon icon="chevron-right"></iron-icon>
-            </paper-button>
+          <a href="${this.url}" id="learn">
+            <span class="title">Learn More</span>
+            <simple-icon-lite icon="chevron-right"></simple-icon-lite>
           </a>
         </div>
       </div>
@@ -108,21 +118,16 @@ class InfoBox extends PolymerElement {
        * Title
        */
       title: {
-        type: String
+        type: String,
       },
       /**
        * Url
        */
       url: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
-  constructor() {
-    super();
-    import("@polymer/iron-icons/iron-icons.js");
-    import("@polymer/paper-button/paper-button.js");
-  }
 }
-window.customElements.define(InfoBox.tag, InfoBox);
+globalThis.customElements.define(InfoBox.tag, InfoBox);
 export { InfoBox };

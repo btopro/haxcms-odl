@@ -1,4 +1,5 @@
 :root {
+    color-scheme: light dark;
     /* HAXCMS Base Styles*/
     --haxcms-base-styles-a-color: var(--odl-haxtheme-a-color);
     --haxcms-base-styles-a-color-active: var(--odl-haxtheme-a-hover-color);
@@ -248,6 +249,26 @@
     --haxtheme-page-footer-odl-mark-a-background-color: var(--odl-haxtheme-accent-color-2); 
   }
 
+  /* Dark mode — flip the surface/text/border variables so the entire
+     ODL theme adapts when body.dark-mode is active (set by HAXcms based
+     on prefers-color-scheme or user toggle). The orange accent stays; the
+     white surfaces become dark and text flips to light. */
+  body.dark-mode {
+    --odl-haxtheme-accent-color-1: #f5f5f5;
+    --odl-haxtheme-accent-color-3: #444;
+    --odl-haxtheme-accent-color-4: #1a1a1a;
+    --odl-haxtheme-font-color: #e0e0e0;
+    --odl-haxtheme-a-color: #4db8ff;
+    --odl-haxtheme-a-hover-color: #7accff;
+    --haxtheme-blog-author-a-color: #e0e0e0;
+    --haxtheme-course-card-a-color: #f5f5f5;
+    --haxtheme-course-card-course-icon-background-color: #1a1a1a;
+    --haxtheme-news-feed-card-heading-h1-color: #f5f5f5;
+    --haxtheme-syllabus-policy-h2-color: #f5f5f5;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
   a {
       color: var(--odl-haxtheme-a-color);
       font-weight: var(--odl-haxtheme-font-weight);
@@ -284,4 +305,29 @@
   ul {
     padding: 0;
     margin: 0;
+  }
+
+  /* ODL action button — replaces legacy <paper-button> used in page content.
+     Inline styles on individual buttons are preserved; this class provides
+     consistent baseline styling for the native <button> replacement. */
+  .odl-action-btn {
+    background-color: var(--odl-haxtheme-accent-color-2, #e2801e);
+    color: var(--odl-haxtheme-accent-color-4, #fff);
+    border: none;
+    text-transform: none;
+    font-size: var(--odl-haxtheme-font-size, 18px);
+    font-weight: var(--odl-haxtheme-font-weight, 300);
+    padding: 8px 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .odl-action-btn .title {
+    display: inline-block;
+  }
+  .odl-action-btn simple-icon-lite {
+    --simple-icon-width: 24px;
+    --simple-icon-height: 24px;
+    color: var(--odl-haxtheme-accent-color-4, #fff);
   }

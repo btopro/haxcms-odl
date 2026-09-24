@@ -6,8 +6,8 @@ const ImaginaryMixin = (base) =>
 
     imaginaryGenerateUrl(image, operation = 'resize', options = []) {
       const optionsString = options.join('&');
-      return `${window.__env.IMAGINARY_URL}/${operation}?url=${
-        window.__env.IMAGINARY_HOST_URL 
+      return `${globalThis.__env.IMAGINARY_URL}/${operation}?url=${
+        globalThis.__env.IMAGINARY_HOST_URL
       }/${image}&${optionsString}`;
     }
   };

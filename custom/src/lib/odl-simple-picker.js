@@ -2,8 +2,8 @@
  * Copyright 2018 The Pennsylvania State University
  * @license Apache-2.0, see License.md for full text.
  */
-import { css } from "lit-element/lit-element.js";
-import { SimplePicker } from "@lrnwebcomponents/simple-picker/simple-picker.js";
+import { css } from "lit";
+import { SimplePicker } from "@haxtheweb/simple-picker/simple-picker.js";
 
 class OdlSimplePicker extends SimplePicker {
   static get styles() {
@@ -30,5 +30,5 @@ class OdlSimplePicker extends SimplePicker {
     super();
   }
 }
-window.customElements.define(OdlSimplePicker.tag, OdlSimplePicker);
+globalThis.customElements.define(OdlSimplePicker.tag, OdlSimplePicker);
 export { OdlSimplePicker };

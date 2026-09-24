@@ -1,18 +1,19 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import "@lrnwebcomponents/haxcms-elements/lib/ui-components/query/site-query.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { varExists, varGet } from "@lrnwebcomponents/hax-body/lib/haxutils.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
-import "@lrnwebcomponents/simple-picker/simple-picker.js"
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/haxcms-elements/lib/ui-components/query/site-query.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { varGet } from "@haxtheweb/utils/lib/object-path.js";
+import { autorun, toJS } from "mobx";
 import "./course-tile.js";
-import "./odl-simple-picker.js"
-class ContentListing extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+import "./odl-simple-picker.js";
+
+class ContentListing extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
-          }
+        }
 
         a {
           text-decoration: var(--haxtheme-page-feature-a-text-decoration);
@@ -27,19 +28,19 @@ class ContentListing extends PolymerElement {
 
         @media screen and (max-width: 768px) {
           h1 {
-            font-size: 28px;
+            font-size: var(--ddd-font-size-m, 28px);
           }
         }
 
         h2 {
-          font-size: 32px;
+          font-size: var(--ddd-font-size-l, 32px);
           margin: 0;
           font-weight: var(--haxtheme-page-feature-h2-font-weight);
         }
 
         @media screen and (max-width: 768px) {
           h2 {
-            font-size: 24px;
+            font-size: var(--ddd-font-size-m, 24px);
           }
         }
 
@@ -161,11 +162,14 @@ class ContentListing extends PolymerElement {
         #results {
           display: flex;
           flex-wrap: wrap;
-          border: solid 2px #dcdcdc;
+          border: solid 2px light-dark(#dcdcdc, #555);
           height: auto;
           margin: 20px;
           display: grid;
-          grid-template-columns: repeat(var(--content-listing-grid-count, 3), 1fr [col-start]);
+          grid-template-columns: repeat(
+            var(--content-listing-grid-count, 3),
+            1fr [col-start]
+          );
         }
 
         @media screen and (max-width: 768px) {
@@ -182,7 +186,7 @@ class ContentListing extends PolymerElement {
         }
 
         @media screen and (max-width: 768px) {
-          simple-picker {
+          odl-simple-picker {
             width: 100%;
           }
         }
@@ -191,45 +195,49 @@ class ContentListing extends PolymerElement {
           margin: 1px;
           flex-grow: 1;
         }
-      </style>
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="feature_wrap">
         <div id="border">
           <div
             id="feature_image"
-            style$="background-image:url([[image]])"
-            alt="[[alt]]"
+            role="img"
+            aria-label=${this.alt}
+            style=${`background-image:url(${this.image})`}
           ></div>
           <div id="feature_description_wrap">
             <div id="title_wrap">
               <div id="title">
-                <h1>[[title]]</h1>
+                <h1>${this.title}</h1>
               </div>
               <site-query
-                result="{{__courseitems}}"
-                conditions="[[condition]]"
+                .conditions=${this._parsedCondition}
+                @result-changed=${this.__courseitemsChanged}
               ></site-query>
               <odl-simple-picker
                 id="courseselect"
                 label="Select a Subject"
-                value="{{__selectedCourse}}"
-                position=""
-                options="[[__courselist(__courseitems)]]"
+                .value=${this.__selectedCourse}
+                .options=${this.__courselist(this.__courseitems)}
+                @value-changed=${this.__selectedCourseChanged}
               >
               </odl-simple-picker>
             </div>
 
             <div id="description">
-              
               <div id="results">
-              <dom-repeat items="[[__selectedCourses(__selectedCourse, __courseitems)]]">
-                <template>
-                  <course-tile
-                    name="[[item.title]]"
-                    image="[[item.metadata.fields.image]]"
-                    url="[[item.location]]"
-                  ></course-tile>
-                </template>
-              </dom-repeat>
+                ${this.__selectedCourses.map(
+                  (item) => html`
+                    <course-tile
+                      name=${item.title}
+                      image=${item.metadata && item.metadata.fields ? item.metadata.fields.image : ""}
+                      url=${item.slug}
+                    ></course-tile>
+                  `,
+                )}
               </div>
             </div>
           </div>
@@ -246,124 +254,186 @@ class ContentListing extends PolymerElement {
        * Image source
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Alt text for image
        */
       alt: {
-        type: String
+        type: String,
       },
       /**
        * Title for feature
        */
       title: {
-        type: String
+        type: String,
       },
       /**
        * Condition
        */
       condition: {
-        type: Object
+        type: Object,
       },
       /**
        * Location
        */
       location: {
-        type: String
+        type: String,
+      },
+      __courseitems: {
+        type: Array,
+      },
+      __selectedCourse: {
+        type: String,
+      },
+      __selectedCourses: {
+        type: Array,
       },
     };
   }
 
+  get _parsedCondition() {
+    if (typeof this.condition === "string") {
+      try {
+        return JSON.parse(this.condition);
+      } catch (e) {
+        return {};
+      }
+    }
+    return this.condition || {};
+  }
+
   constructor() {
     super();
-    this.__disposer = [];
-    this.__defaultGridCount = getComputedStyle(this).getPropertyValue('--content-listing-grid-count');
-    autorun(reaction => {
-      this.activeItem = toJS(store.activeItem);
-      this.__disposer.push(reaction);
-    });
+    this.__courseitems = [];
+    this.__selectedCourse = null;
+    this.__selectedCourses = [];
+    this.__defaultGridCount = 3;
+    this.__disposers = [];
+    this.__courseitemsChanged = this.__courseitemsChanged.bind(this);
+    this.__selectedCourseChanged = this.__selectedCourseChanged.bind(this);
+    this.__disposers.push(
+      autorun(() => {
+        this.activeItem = toJS(store.activeItem);
+      }),
+    );
   }
-  disconnectedCallback() {
-    for (var i in this.__disposer) {
-      this.__disposer[i].dispose();
+
+  firstUpdated(changedProperties) {
+    if (super.firstUpdated) {
+      super.firstUpdated(changedProperties);
     }
+    this.__defaultGridCount =
+      getComputedStyle(this).getPropertyValue(
+        "--content-listing-grid-count",
+      ) || 3;
+  }
+
+  disconnectedCallback() {
+    this.__disposers.forEach((disposer) => disposer());
     super.disconnectedCallback();
+  }
+
+  updated(changedProperties) {
+    if (super.updated) {
+      super.updated(changedProperties);
+    }
+    if (changedProperties.has("__selectedCourses")) {
+      this.__updateResultsGridCount(this.__selectedCourses.length);
+    }
+  }
+
+  __courseitemsChanged(e) {
+    this.__courseitems = e.detail.value;
+    this.__updateSelectedCourses();
+  }
+
+  __selectedCourseChanged(e) {
+    this.__selectedCourse = e.detail.value;
+    this.__updateSelectedCourses();
+  }
+
+  __updateSelectedCourses() {
+    this.__selectedCourses = this.__computeSelectedCourses(
+      this.__selectedCourse,
+      this.__courseitems,
+    );
   }
 
   __filteredCourselist(items) {
     let filterIndex = [];
-    const filtered = items.filter(item => {
-      if (filterIndex.includes(varGet(item, this.location, false))) {
+    const filtered = items.filter((item) => {
+      if (filterIndex.includes(varGet(item, this.slug, false))) {
         return false;
       } else {
-        filterIndex.push(varGet(item, this.location, false));
+        filterIndex.push(varGet(item, this.slug, false));
         return true;
       }
     });
     return filtered;
   }
+
   __courselist(items) {
     const filtered = this.__filteredCourselist(items);
-    const courses = filtered.map(item => {
+    const courses = filtered.map((item) => {
       return {
-        value: varGet(item, this.location, false),
-        alt: varGet(item, this.location, false)
+        value: varGet(item, this.slug, false),
+        alt: varGet(item, this.slug, false),
       };
     });
     return [courses];
   }
+
   __courseItemsDuped(items) {
     const filtered = this.__filteredCourselist(items);
-    const subjects = filtered.map(item => varGet(item, this.location, false));
+    const subjects = filtered.map((item) =>
+      varGet(item, this.slug, false),
+    );
     return subjects;
   }
 
-  __selectedCourses(selected, courses) {
-    const filtered = courses.filter(course => {
-      if (course.metadata.fields.subject === selected) {
+  __computeSelectedCourses(selected, courses) {
+    const filtered = courses.filter((course) => {
+      if (
+        course.metadata &&
+        course.metadata.fields &&
+        course.metadata.fields.subject === selected
+      ) {
         return true;
-      }
-      else {
+      } else {
         return false;
       }
     });
-
-    // update the grid column size
-    this.__updateResultsGridCount(filtered.length);
-      
-    return filtered;  
+    return filtered;
   }
 
   __updateResultsGridCount(gridItems) {
     const hostComputedStyle = getComputedStyle(this);
-    const mq = hostComputedStyle.getPropertyValue('--content-listing-results-medium-breakpoint') || 900;
-    const currentGridCount = hostComputedStyle.getPropertyValue('--content-listing-grid-count');
+    const mq =
+      hostComputedStyle.getPropertyValue(
+        "--content-listing-results-medium-breakpoint",
+      ) || 900;
+    const currentGridCount = hostComputedStyle.getPropertyValue(
+      "--content-listing-grid-count",
+    );
     let newGridCount;
-    // dynamically set grid width
     if (this.offsetWidth > mq) {
       if (gridItems === 2) {
         newGridCount = 2;
-      }
-      else if (gridItems === 1) {
+      } else if (gridItems === 1) {
         newGridCount = 1;
-      }
-      else {
+      } else {
         newGridCount = this.__defaultGridCount;
       }
-    }
-    else {
+    } else {
       newGridCount = this.__defaultGridCount;
     }
 
     if (newGridCount !== currentGridCount) {
-      this.style.setProperty('--content-listing-grid-count', newGridCount);
+      this.style.setProperty("--content-listing-grid-count", newGridCount);
     }
   }
 }
 
-
-
-
-window.customElements.define(ContentListing.tag, ContentListing);
+globalThis.customElements.define(ContentListing.tag, ContentListing);
 export { ContentListing };

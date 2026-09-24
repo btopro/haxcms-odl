@@ -1,12 +1,11 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-import "@polymer/paper-button/paper-button.js";
-import "@polymer/iron-icon/iron-icon.js";
+import { LitElement, html, css } from "lit";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 
 class WorksheetDownload extends LitElement {
   static get properties() {
     return {
       title: { type: String },
-      link: { type: String }
+      link: { type: String },
     };
   }
 
@@ -21,8 +20,8 @@ class WorksheetDownload extends LitElement {
         icon: "icons:file-download",
         color: "blue",
         meta: {
-          author: "LRNWebComponents"
-        }
+          author: "LRNWebComponents",
+        },
       },
       settings: {
         quick: [
@@ -31,15 +30,15 @@ class WorksheetDownload extends LitElement {
             title: "Title",
             description: "The title of the download.",
             inputMethod: "textfield",
-            icon: "editor:title"
+            icon: "editor:title",
           },
           {
             property: "link",
             title: "Link",
             description: "The link for the download.",
             inputMethod: "textfield",
-            icon: "editor:insert-link"
-          }
+            icon: "editor:insert-link",
+          },
         ],
         configure: [
           {
@@ -47,18 +46,18 @@ class WorksheetDownload extends LitElement {
             title: "Title",
             description: "The title of the download.",
             inputMethod: "textfield",
-            icon: "editor:title"
+            icon: "editor:title",
           },
           {
             property: "link",
             title: "Link",
             description: "The link for the download.",
             inputMethod: "textfield",
-            icon: "editor:insert-link"
-          }
+            icon: "editor:insert-link",
+          },
         ],
-        advanced: []
-      }
+        advanced: [],
+      },
     };
   }
 
@@ -68,47 +67,54 @@ class WorksheetDownload extends LitElement {
     this.link = "";
   }
   static get styles() {
-    return [css`
-      :host {
-        display: block;
-      }
+    return [
+      css`
+        :host {
+          display: block;
+        }
 
-      a {
-        text-decoration: none;
-        color: #0c7cd5;
-      }
+        a {
+          text-decoration: none;
+          color: #0c7cd5;
+        }
 
-      paper-button {
-        --paper-button-ink-color: #dcdcdc;
-        text-transform: none;
-        border: solid 2px #dcdcdc;
-        display: flex;
-        width: 100%;
-        margin: 0 auto 0;
-      }
+        button {
+          text-transform: none;
+          border: solid 2px #dcdcdc;
+          display: flex;
+          width: 100%;
+          margin: 0 auto 0;
+          padding: var(--ddd-spacing-3);
+          background: none;
+          cursor: pointer;
+          font-size: var(--ddd-font-size-sm);
+          align-items: center;
+        }
 
-      paper-button:hover {
-        background-color: #0c7cd5;
-        color: #fff;
-      }
+        button:hover {
+          background-color: #0c7cd5;
+          color: #fff;
+        }
 
-      iron-icon {
-        margin-right: 5px;
-      }
-    `];
+        simple-icon-lite {
+          margin-right: var(--ddd-spacing-1);
+          color: currentColor;
+        }
+      `,
+    ];
   }
   render() {
     return html`
       <div id="button_wrap">
-        <a href="${this.link}" target="_blank">
-          <paper-button>
-            <iron-icon icon="file-download"></iron-icon>
+        <a href="${this.link}" target="_blank" rel="noopener noreferrer">
+          <button>
+            <simple-icon-lite icon="icons:file-download"></simple-icon-lite>
             ${this.title}
-          </paper-button>
+          </button>
         </a>
       </div>
     `;
   }
 }
-customElements.define("worksheet-download", WorksheetDownload);
+globalThis.customElements.define("worksheet-download", WorksheetDownload);
 export { WorksheetDownload };

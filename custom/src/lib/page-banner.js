@@ -1,9 +1,10 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 
-class PageBanner extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class PageBanner extends DDD {
+  static get styles() {
+    return [
+      css`
         :host {
           display: block;
           --page-banner-text-transform: none;
@@ -13,8 +14,14 @@ class PageBanner extends PolymerElement {
           display: var(--haxtheme-page-banner-banner-wrap-display, block);
           overflow: var(--haxtheme-page-banner-banner-wrap-overflow, hidden);
           height: var(--haxtheme-page-banner-banner-wrap-height, 28vw);
-          max-height: var(--haxtheme-page-banner-banner-wrap-max-height, 420px);
-          position: var(--haxtheme-page-banner-banner-wrap-position, relative);
+          max-height: var(
+            --haxtheme-page-banner-banner-wrap-max-height,
+            420px
+          );
+          position: var(
+            --haxtheme-page-banner-banner-wrap-position,
+            relative
+          );
         }
 
         .image_wrap {
@@ -32,7 +39,10 @@ class PageBanner extends PolymerElement {
           );
           width: var(--haxtheme-page-banner-image-wrap-width, 100%);
           height: var(--haxtheme-page-banner-image-wrap-height, 100%);
-          position: var(--haxtheme-page-banner-image-wrap-position, absolute);
+          position: var(
+            --haxtheme-page-banner-image-wrap-position,
+            absolute
+          );
           display: var(--haxtheme-page-banner-image-wrap-display, flex);
           justify-content: var(
             --haxtheme-page-banner-image-wrap-justify-content,
@@ -45,7 +55,6 @@ class PageBanner extends PolymerElement {
           flex: var(--haxtheme-page-banner-image-wrap-flex, 1 1 auto);
           margin: var(--haxtheme-page-banner-image-wrap-margin, 0);
           padding: var(--haxtheme-page-banner-image-wrap-padding, 0);
-          @apply --haxtheme-page-banner-image-wrap;
         }
 
         .image_text {
@@ -59,10 +68,11 @@ class PageBanner extends PolymerElement {
           );
           margin: var(--haxtheme-page-banner-image-text-margin, 5vw);
           padding: var(--haxtheme-page-banner-image-text-padding, 2vw);
-          text-align: var(--haxtheme-page-banner-image-text-text-align, center);
+          text-align: var(
+            --haxtheme-page-banner-image-text-text-align,
+            center
+          );
           text-transform: var(--page-banner-text-transform);
-          text-transform: var(--page-banner-text-transform);
-          @apply --haxtheme-page-banner-image-text;
         }
 
         .image_text h1 {
@@ -75,7 +85,6 @@ class PageBanner extends PolymerElement {
             --haxtheme-page-banner-image-text-h1-font-size,
             calc(23px + (72 - 28) * ((100vw - 300px) / (1600 - 300)))
           );
-          @apply --haxtheme-page-banner-image-text-h1;
         }
 
         @media (min-width: 1200px) {
@@ -83,13 +92,22 @@ class PageBanner extends PolymerElement {
             font-size: 46px;
           }
         }
-      </style>
+      `,
+    ];
+  }
+  render() {
+    return html`
       <div id="banner_wrap">
-        <div class="image_wrap" style$="background-image:url([[image]])">
+        <div
+          class="image_wrap"
+          role="img"
+          aria-label=${this.alt}
+          style=${`background-image:url(${this.image})`}
+        >
           <div class="banner_image"></div>
           <div class="image_text_container">
             <div class="image_text">
-              <h1>[[text]]</h1>
+              <h1>${this.text}</h1>
             </div>
           </div>
         </div>
@@ -105,22 +123,22 @@ class PageBanner extends PolymerElement {
        * Image source
        */
       image: {
-        type: String
+        type: String,
       },
       /**
        * Text over image
        */
       text: {
-        type: String
+        type: String,
       },
       /**
        * Alt text for image
        */
       alt: {
-        type: String
-      }
+        type: String,
+      },
     };
   }
 }
-window.customElements.define(PageBanner.tag, PageBanner);
+globalThis.customElements.define(PageBanner.tag, PageBanner);
 export { PageBanner };

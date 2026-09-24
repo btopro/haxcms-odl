@@ -1,28 +1,55 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import { autorun, toJS } from "mobx";
 import "./page-banner.js";
 
-class HaxThemeDemos extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class HaxThemeDemos extends DDD {
+  static get tag() {
+    return "haxtheme-demos";
+  }
+
+  static get properties() {
+    return {
+      ...(super.properties || {}),
+      editMode: { type: Boolean, reflect: true, attribute: "edit-mode" },
+      manifest: { type: Object },
+    };
+  }
+
+  constructor() {
+    super();
+    this.editMode = false;
+    this.__disposer = autorun(() => {
+      this.manifest = toJS(store.routerManifest);
+    });
+  }
+
+  disconnectedCallback() {
+    this.__disposer();
+    super.disconnectedCallback();
+  }
+
+  static get styles() {
+    return [
+      super.styles || [],
+      css`
         :host {
           display: block;
         }
-
         #content-wrap {
           display: flex;
           justify-content: center;
-        
         }
-        /**
-       * Hide the slotted content during edit mode. This must be here to work.
-       */
         :host([edit-mode]) #slot {
           display: none;
         }
-      </style>
+      `,
+    ];
+  }
+
+  render() {
+    return html`
       <page-banner
         image="files/theme-images/page-banners/course_banner.jpg"
         text="Demos Template"
@@ -39,19 +66,6 @@ class HaxThemeDemos extends PolymerElement {
       </div>
     `;
   }
-  static get tag() {
-    return "haxtheme-demos";
-  }
-  constructor() {
-    super();
-    this.__disposer = autorun(() => {
-      this.manifest = toJS(store.routerManifest);
-    });
-  }
-  disconnectedCallback() {
-    this.__disposer();
-    super.disconnectedCallback();
-  }
 }
-window.customElements.define(HaxThemeDemos.tag, HaxThemeDemos);
+globalThis.customElements.define(HaxThemeDemos.tag, HaxThemeDemos);
 export { HaxThemeDemos };

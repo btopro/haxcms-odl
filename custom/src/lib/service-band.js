@@ -1,10 +1,14 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-class ServiceBand extends LitElement {
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+
+class ServiceBand extends DDD {
   /**
    * LitElement constructable styles enhancement
    */
   static get styles() {
     return [
+      ...super.styles,
       css`
         :host {
           display: block;
@@ -122,9 +126,15 @@ class ServiceBand extends LitElement {
           }
         }
 
-        paper-button {
+        button#learn {
           padding: 0;
           margin: 0;
+          border: none;
+          background: none;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          font: inherit;
         }
 
         .action_button {
@@ -135,16 +145,20 @@ class ServiceBand extends LitElement {
           text-decoration: none;
         }
 
-        paper-button#learn {
+        button#learn {
           color: #e2801e;
         }
 
-        paper-button#learn:hover,
-        paper-button#learn:focus {
+        button#learn:hover,
+        button#learn:focus {
           color: var(--haxtheme-info-box-paper-button-color-active);
-          @apply --haxtheme-info-box-paper-button-active;
         }
-      `
+
+        button#learn simple-icon-lite {
+          --simple-icon-height: 24px;
+          --simple-icon-width: 24px;
+        }
+      `,
     ];
   }
   render() {
@@ -169,26 +183,23 @@ class ServiceBand extends LitElement {
     switch (type) {
       case "video":
         return this.renderVideo();
-        break;
       case "icon":
         return this.renderIcon();
-        break;
     }
     return this.renderImage();
   }
   renderIcon() {
-    import("@polymer/iron-icon/iron-icon.js");
     return html`
-      <iron-icon icon="${this.source}"></iron-icon>
+      <simple-icon-lite icon="${this.source}"></simple-icon-lite>
     `;
   }
   renderImage() {
     return html`
-      <div id="image" style="background-image:url(${this.source})"></div>
+      <div id="image" style=${`background-image:url(${this.source})`}></div>
     `;
   }
   renderVideo() {
-    import("@lrnwebcomponents/video-player/video-player.js");
+    import("@haxtheweb/video-player/video-player.js");
     return html`
       <div id="video">
         <video-player source="${this.source}"></video-player>
@@ -199,19 +210,20 @@ class ServiceBand extends LitElement {
     return html`
     <div class="action_button">
       <a href="${this.url}">
-        <paper-button noink id="learn">
-          <div class="title">Read More</div>
-          <iron-icon icon="chevron-right"></iron-icon>
-        </paper-button>
+        <button id="learn">
+          <span class="title">Read More</span>
+          <simple-icon-lite icon="icons:chevron-right"></simple-icon-lite>
+        </button>
       </a>
     </div>
-    `
+    `;
   }
   static get tag() {
     return "service-band";
   }
   static get properties() {
     return {
+      ...super.properties,
       /**
        * Media Source
        */
@@ -250,7 +262,7 @@ class ServiceBand extends LitElement {
         reflect: true
       },
       /**
-       * Optional Url 
+       * Optional Url
        */
       url: {
         type: String
@@ -264,5 +276,5 @@ class ServiceBand extends LitElement {
     this.url = null;
   }
 }
-window.customElements.define(ServiceBand.tag, ServiceBand);
+globalThis.customElements.define(ServiceBand.tag, ServiceBand);
 export { ServiceBand };

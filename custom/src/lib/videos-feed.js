@@ -1,5 +1,7 @@
-import { LitElement, html, css } from "lit-element/lit-element.js";
-class VideosFeed extends LitElement {
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+
+class VideosFeed extends DDD {
   static get styles() {
     return [
       css`
@@ -27,12 +29,12 @@ class VideosFeed extends LitElement {
         }
 
         .feed_header h2 {
-          margin: 0 0 20px 0;
-          font-weight: 400;
-          font-size: 34px;
+          margin: 0 0 var(--ddd-spacing-5, 20px) 0;
+          font-weight: var(--ddd-font-weight-regular, 400);
+          font-size: var(--ddd-font-size-l, 34px);
           background-color: var(--theme-color-2);
-          color: #fff;
-          padding: 15px;
+          color: var(--theme-color-4);
+          padding: var(--ddd-spacing-4, 15px);
         }
 
         @media screen and (max-width: 768px) {
@@ -40,8 +42,8 @@ class VideosFeed extends LitElement {
             display: flex;
             justify-content: center;
             width: 100%;
-            font-size: 28px;
-            margin: 0 0 15px 0;
+            font-size: var(--ddd-font-size-m, 28px);
+            margin: 0 0 var(--ddd-spacing-4, 15px) 0;
           }
         }
 
@@ -57,7 +59,7 @@ class VideosFeed extends LitElement {
         }
 
         #video_feed_wrap {
-          margin: 20px;
+          margin: var(--ddd-spacing-5, 20px);
         }
 
         #card_wrap {
@@ -67,7 +69,7 @@ class VideosFeed extends LitElement {
           flex-direction: column;
           justify-content: space-evenly;
           border-right: solid 2px #dcdcdc;
-          padding: 0 40px;
+          padding: 0 var(--ddd-spacing-10, 40px);
         }
 
         #card_wrap:last-of-type {
@@ -76,13 +78,17 @@ class VideosFeed extends LitElement {
 
         @media screen and (max-width: 768px) {
           #card_wrap {
-            padding: 0 0 15px 0;
+            padding: 0 0 var(--ddd-spacing-4, 15px) 0;
             border-right: none;
             border-bottom: solid 2px #dcdcdc;
             margin-bottom: 25px;
           }
         }
-      `
+
+        iframe {
+          border: none;
+        }
+      `,
     ];
   }
   render() {
@@ -97,7 +103,7 @@ class VideosFeed extends LitElement {
               width="100%"
               height="415"
               src="https://www.youtube.com/embed/zPwe8nMYCq0"
-              frameborder="0"
+              title="Featured video 1"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
@@ -107,7 +113,7 @@ class VideosFeed extends LitElement {
               width="100%"
               height="415"
               src="https://www.youtube.com/embed/5n7WCeHXc4A"
-              frameborder="0"
+              title="Featured video 2"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>
@@ -120,5 +126,5 @@ class VideosFeed extends LitElement {
     return "videos-feed";
   }
 }
-window.customElements.define(VideosFeed.tag, VideosFeed);
+globalThis.customElements.define(VideosFeed.tag, VideosFeed);
 export { VideosFeed };

@@ -1,16 +1,19 @@
-import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
-import { store } from "@lrnwebcomponents/haxcms-elements/lib/core/haxcms-site-store.js";
-import "@lrnwebcomponents/person-testimonial/person-testimonial.js";
-import { autorun, toJS } from "mobx/lib/mobx.module.js";
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
+import "@haxtheweb/person-testimonial/person-testimonial.js";
+import { autorun, toJS } from "mobx";
 import "./page-banner.js";
 import "./service-icon.js";
 import "./service-band.js";
 import "./course-icons.js";
+import "./haxtheme-service-icons.js";
 
-class HaxThemeServiceMultimedia extends PolymerElement {
-  static get template() {
-    return html`
-      <style>
+class HaxThemeServiceMultimedia extends DDD {
+  static get styles() {
+    return [
+      ...super.styles,
+      css`
         :host {
           display: block;
         }
@@ -102,7 +105,11 @@ class HaxThemeServiceMultimedia extends PolymerElement {
         person-testimonial {
           margin-right: 10px;
         }
-      </style>
+      `,
+    ];
+  }
+  render() {
+    return html`
       <page-banner
         image="files/theme-images/page-banners/obs-banner3.jpg"
         text="Multimedia"
@@ -246,14 +253,30 @@ class HaxThemeServiceMultimedia extends PolymerElement {
   static get tag() {
     return "haxtheme-service-multimedia";
   }
+  static get properties() {
+    return {
+      ...super.properties,
+      editMode: {
+        type: Boolean,
+        reflect: true,
+        attribute: "edit-mode",
+      },
+      manifest: {
+        type: Object,
+      },
+      activeItem: {
+        type: Object,
+      },
+    };
+  }
   connectedCallback() {
     super.connectedCallback();
     this.__disposer = [];
-    autorun(reaction => {
+    autorun((reaction) => {
       this.manifest = toJS(store.routerManifest);
       this.__disposer.push(reaction);
     });
-    autorun(reaction => {
+    autorun((reaction) => {
       this.activeItem = toJS(store.activeItem);
       this.__disposer.push(reaction);
     });
@@ -265,5 +288,8 @@ class HaxThemeServiceMultimedia extends PolymerElement {
     super.disconnectedCallback();
   }
 }
-window.customElements.define(HaxThemeServiceMultimedia.tag, HaxThemeServiceMultimedia);
+globalThis.customElements.define(
+  HaxThemeServiceMultimedia.tag,
+  HaxThemeServiceMultimedia,
+);
 export { HaxThemeServiceMultimedia };

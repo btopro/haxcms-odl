@@ -1,81 +1,102 @@
-import { html, Polymer } from "@polymer/polymer/polymer-legacy.js";
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
-import "@polymer/iron-icon/iron-icon.js";
-import './haxtheme-icons.js';
-Polymer({
-  _template: html`
-    <style>
-      :host {
-        display: block;
-        --icon-fill:#adb5bd;
-        --icon-fill-hover:#6c757d;
-        --paper-tooltip-background: #6c757d;
-        --paper-tooltip-delay-in: 100;
-      }
+import { html, css } from "lit";
+import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
+import "@haxtheweb/simple-tooltip/simple-tooltip.js";
+import "./haxtheme-icons.js";
 
-     paper-tooltip {
-      --paper-tooltip: {
-        font-size: 16px;
-        text-transform: none;
-      }
-     }
-
-      iron-icon {
-        width: 50px;
-        height: 50px;
-        fill: var(--icon-fill);
-      }
-
-      iron-icon:hover {
-        fill: var(--icon-fill-hover);
-      }
-      
-      paper-button#scroll {
-        transition: opacity .25s ease-in-out;
-        position: fixed;
-        bottom: 70px;
-        right: 10px;
-        z-index: 99;
-        padding: 10px;
-      }
-
-      @media screen and (max-width: 700px) {
-        paper-button#scroll {
-          bottom: 70px;
-          right: 0;
+class PageScroll extends DDD {
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        :host {
+          display: block;
+          --icon-fill: #adb5bd;
+          --icon-fill-hover: #6c757d;
         }
-      }
-    </style>
-    <paper-button id="scroll" on-click="__topFunction" aria-label="scroll to top" noink="">
-      <iron-icon icon="haxthemeicons:scroll" role="img"></iron-icon>
-      <paper-tooltip for="scroll" position="left" offset="0">Scroll to top</paper-tooltip>
-    </paper-button>
-`,
 
-  is: "page-scroll",
+        simple-icon-lite {
+          width: var(--ddd-icon-size-xl);
+          height: var(--ddd-icon-size-xl);
+          color: var(--icon-fill);
+        }
+
+        simple-icon-lite:hover {
+          color: var(--icon-fill-hover);
+        }
+
+        button#scroll {
+          transition: opacity 0.25s ease-in-out;
+          position: fixed;
+          bottom: 70px;
+          right: 10px;
+          z-index: 99;
+          padding: var(--ddd-spacing-3);
+          background: none;
+          border: none;
+          cursor: pointer;
+          opacity: 0;
+        }
+
+        @media screen and (max-width: 700px) {
+          button#scroll {
+            bottom: 70px;
+            right: 0;
+          }
+        }
+      `
+    ];
+  }
+
+  static get tag() {
+    return "page-scroll";
+  }
+
+  constructor() {
+    super();
+    this.__scrollTop = this.__scrollTop.bind(this);
+    this.__topFunction = this.__topFunction.bind(this);
+  }
 
   // When the user scrolls down 500px from the top of the document, show the button
-  attached: function() {
-    window.addEventListener("scroll", this.scrollTop.bind(this));
-  },
-  detached: function() {
-    window.removeEventListener("scroll", this.scrollTop.bind(this));
-  },
-  scrollTop: function() {
-    if (
-      document.body.scrollTop > 600 ||
-      document.documentElement.scrollTop > 600
-    ) {
-      document.getElementById("scroll").style.opacity = "0.9";
-    } else {
-      document.getElementById("scroll").style.opacity = "0";
+  connectedCallback() {
+    super.connectedCallback();
+    globalThis.addEventListener("scroll", this.__scrollTop);
+  }
+  disconnectedCallback() {
+    globalThis.removeEventListener("scroll", this.__scrollTop);
+    super.disconnectedCallback();
+  }
+
+  __scrollTop() {
+    var scrollBtn = this.shadowRoot && this.shadowRoot.querySelector("#scroll");
+    if (!scrollBtn) {
+      return;
     }
-  },
+    if (
+      globalThis.document.body.scrollTop > 600 ||
+      globalThis.document.documentElement.scrollTop > 600
+    ) {
+      scrollBtn.style.opacity = "0.9";
+    } else {
+      scrollBtn.style.opacity = "0";
+    }
+  }
 
   // When the user clicks on the button, scroll to the top of the document
-  __topFunction: function(e) {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+  __topFunction(e) {
+    globalThis.document.body.scrollTop = 0; // For Safari
+    globalThis.document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   }
-});
+
+  render() {
+    return html`
+      <button id="scroll" @click=${this.__topFunction} aria-label="scroll to top">
+        <simple-icon-lite icon="haxthemeicons:scroll"></simple-icon-lite>
+        <simple-tooltip for="scroll" position="left" offset="0">Scroll to top</simple-tooltip>
+      </button>
+    `;
+  }
+}
+globalThis.customElements.define(PageScroll.tag, PageScroll);
+export { PageScroll };

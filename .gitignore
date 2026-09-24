@@ -1,4 +1,10 @@
-@lrnwebcomponents
+.DS_Store
 node_modules
-!build/**/node_modules
-!build/**/@lrnwebcomponents
+dist
+yarn.lock
+@lrnwebcomponents
+!custom/build
+!build/es6/node_modules
+!build/es6/node_modules/**
+!build/es6/dist
+!build/es6/dist/**
