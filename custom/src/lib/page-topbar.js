@@ -79,12 +79,12 @@ class PageTopBar extends DDD {
     return html`
       <div id="topbar-wrap">
         <polaris-mark
-          name="Eberly College"
-          name2="of Science"
+          name="Eberly College of Science"
           name3="Office of Digital Learning"
           url="https://science.psu.edu/"
           type="${!this.darkMode ? "dark" : "light"}"
-          linex="400"
+          linex="376"
+          name3x="392"
         ></polaris-mark>
         <div class="spacer"></div>
         <div class="action_button">
