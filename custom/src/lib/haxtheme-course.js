@@ -7,7 +7,6 @@ import "@haxtheweb/haxcms-elements/lib/ui-components/blocks/site-recent-content-
 import "@haxtheweb/video-player/video-player.js";
 import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 import "./page-banner.js";
-import "./course-icons.js";
 
 class HaxThemeCourse extends DDD {
   static get tag() {

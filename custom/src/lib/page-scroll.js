@@ -18,7 +18,6 @@ class PageScroll extends DDD {
         simple-icon-lite {
           width: var(--ddd-icon-size-xl);
           height: var(--ddd-icon-size-xl);
-          color: var(--icon-fill);
         }
 
         simple-icon-lite:hover {

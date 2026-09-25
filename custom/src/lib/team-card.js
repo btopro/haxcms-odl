@@ -105,7 +105,6 @@ class TeamCard extends DDD {
         simple-icon-lite {
           --simple-icon-height: var(--ddd-icon-size-sm, 16px);
           --simple-icon-width: var(--ddd-icon-size-sm, 16px);
-          color: #fff;
         }
       `,
     ];

@@ -149,10 +149,7 @@ class HomePageBanner extends DDD {
         }
 
         .company_name h2 {
-          font-size: var(
-            --haxtheme-homepage-banner-company-name-h2-font-size,
-            calc(18px + (72 - 28) * ((100vw - 300px) / (1600 - 300)))
-          );
+          font-size: 34px;
           font-weight: var(
             --haxtheme-homepage-banner-company-name-h2-font-weight,
             400

@@ -30,7 +30,6 @@ class AlertMessage extends DDD {
         simple-icon-lite {
           width: var(--ddd-icon-size-sm);
           height: var(--ddd-icon-size-sm);
-          color: #fff;
           margin-right: var(--ddd-spacing-1);
           vertical-align: middle;
         }

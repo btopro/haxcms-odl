@@ -5,7 +5,6 @@ import { autorun, toJS } from "mobx";
 import "./page-banner.js";
 import "./service-icon.js";
 import "./service-band.js";
-import "./course-icons.js";
 import "./haxtheme-service-icons.js";
 
 class HaxThemeServiceLab extends DDD {

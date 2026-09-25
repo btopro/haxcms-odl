@@ -5,7 +5,6 @@ import { autorun, toJS } from "mobx";
 import "@haxtheweb/haxcms-elements/lib/ui-components/query/site-query.js";
 import "./page-banner.js";
 import "./course-card.js";
-import "./course-icons.js";
 
 class HaxThemeCourses extends DDD {
   static get tag() {

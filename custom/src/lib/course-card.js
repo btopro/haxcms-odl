@@ -75,7 +75,6 @@ class CourseCard extends DDD {
             50px
           );
           border: var(--haxtheme-course-card-course-icon-border, solid);
-          border-color: var(--haxtheme-course-card-course-icon-border-color);
           border-width: var(
             --haxtheme-course-card-course-icon-border-width,
             5px
@@ -94,7 +93,6 @@ class CourseCard extends DDD {
             --haxtheme-course-card-iron-icon-height,
             70px
           );
-          color: var(--haxtheme-course-card-iron-icon-color);
         }
 
         #course_image {
