@@ -258,6 +258,9 @@
     --odl-haxtheme-accent-color-3: #444;
     --odl-haxtheme-accent-color-4: #1a1a1a;
     --odl-haxtheme-font-color: #e0e0e0;
+    /* Custom property that cascades through shadow DOM to set text color
+       on light surfaces (page-feature, info-box, etc.) that flip dark. */
+    --odl-feature-text-color: #e0e0e0;
     --odl-haxtheme-a-color: #4db8ff;
     --odl-haxtheme-a-hover-color: #7accff;
     --haxtheme-blog-author-a-color: #e0e0e0;
@@ -265,6 +268,24 @@
     --haxtheme-course-card-course-icon-background-color: #1a1a1a;
     --haxtheme-news-feed-card-heading-h1-color: #f5f5f5;
     --haxtheme-syllabus-policy-h2-color: #f5f5f5;
+    /* Text on orange/dark accent surfaces must stay white even in dark mode
+       (these are on the orange footer, promo tile back card, banners, etc.) */
+    --haxtheme-page-footer-address-color: #fff;
+    --haxtheme-page-footer-legal-item-color: #fff;
+    --haxtheme-page-footer-legal-item-a-color: #fff;
+    --haxtheme-page-footer-iron-icon-fill: #fff;
+    --haxtheme-homepage-banner-company-name-h2-color: #fff;
+    --haxtheme-homepage-banner-image-text-h1-color: #fff;
+    --haxtheme-homepage-banner-logo-image-border-color: #fff;
+    --haxtheme-page-banner-image-text-h1-color: #fff;
+    --haxtheme-team-card-info-container-color: #fff;
+    --haxtheme-team-card-name-border-bottom-color: #fff;
+    --promo-tile-front-title-h1-color: #fff;
+    --promo-tile-back-title-h1-color: #fff;
+    --promo-tile-back-content-font-color: #fff;
+    --promo-tile-paper-button-learn-font-color: #fff;
+    --promo-tile-paper-button-learn-border-color: #fff;
+    --haxtheme-news-feed-feed-header-h2-color: #fff;
     background-color: #1a1a1a;
     color: #e0e0e0;
   }

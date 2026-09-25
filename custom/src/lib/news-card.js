@@ -2,9 +2,8 @@ import { html, css } from "lit";
 import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 import "@haxtheweb/simple-icon/lib/simple-icons.js";
-import { ImaginaryMixin } from "./ImaginaryMixin.js";
 
-class NewsCard extends ImaginaryMixin(DDD) {
+class NewsCard extends DDD {
   static get styles() {
     return [
       css`
@@ -171,19 +170,13 @@ class NewsCard extends ImaginaryMixin(DDD) {
     ];
   }
   render() {
-    let imageResized = this.imaginaryGenerateUrl(this.image, "smartcrop", [
-      "width=450",
-      "height=600",
-      "quality=75",
-      "type=jpeg",
-    ]);
     return html`
       <div id="news_wrap">
         <div
           id="news_image"
           role="img"
           aria-label=${this.alt}
-          style=${`background-image:url(${imageResized})`}
+          style=${`background-image:url(${this.image})`}
         ></div>
         <div id="content_wrap">
           <div id="header_info">

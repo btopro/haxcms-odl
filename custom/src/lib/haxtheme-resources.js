@@ -2,13 +2,12 @@ import { html, css } from "lit";
 import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
 import { autorun, toJS } from "mobx";
-import { ImaginaryMixin } from "./ImaginaryMixin.js";
 import "@haxtheweb/haxcms-elements/lib/ui-components/navigation/site-breadcrumb.js";
 import "./page-banner.js";
 import "./resources-sidemenu.js";
 import "./odl-faqs.js";
 
-class HaxThemeResources extends ImaginaryMixin(DDD) {
+class HaxThemeResources extends DDD {
   static get tag() {
     return "haxtheme-resources";
   }

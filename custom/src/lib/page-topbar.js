@@ -1,7 +1,8 @@
 import { html, css } from "lit";
 import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
+import { autorun, toJS, store } from "@haxtheweb/haxcms-elements/lib/core/HAXCMSLitElementTheme.js";
 import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
-import "./company-mark.js";
+import "@haxtheweb/polaris-theme/lib/polaris-mark.js";
 import "./page-search.js";
 import "./alert-message.js";
 class PageTopBar extends DDD {
@@ -65,14 +66,26 @@ class PageTopBar extends DDD {
         page-search {
           margin-left: var(--ddd-spacing-2);
         }
+
+        polaris-mark {
+          width: 500px;
+          height: 100px;
+          margin: 16px 0 0 16px;
+        }
       `,
     ];
   }
   render() {
     return html`
-      ${this.renderAlert(this.alert)}
       <div id="topbar-wrap">
-        <company-mark></company-mark>
+        <polaris-mark
+          name="Eberly College"
+          name2="of Science"
+          name3="Office of Digital Learning"
+          url="https://science.psu.edu/"
+          type="${!this.darkMode ? "dark" : "light"}"
+          linex="400"
+        ></polaris-mark>
         <div class="spacer"></div>
         <div class="action_button">
           <a
@@ -116,6 +129,11 @@ class PageTopBar extends DDD {
       alert: {
         type: Boolean,
       },
+      darkMode: {
+        type: Boolean,
+        reflect: true,
+        attribute: "dark-mode",
+      },
       /**
        * Editing state for the page (forwarded from theme)
        */
@@ -130,6 +148,13 @@ class PageTopBar extends DDD {
     super();
     this.alert = false;
     this.editMode = false;
+    this.darkMode = false;
+    autorun(() => {
+      this.darkMode = toJS(store.darkMode);
+    });
+    autorun(() => {
+      this.editMode = toJS(store.editMode);
+    });
   }
 }
 globalThis.customElements.define(PageTopBar.tag, PageTopBar);

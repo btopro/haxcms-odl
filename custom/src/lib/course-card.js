@@ -2,9 +2,8 @@ import { html, css } from "lit";
 import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 import "@haxtheweb/simple-icon/lib/simple-icons.js";
-import { ImaginaryMixin } from "./ImaginaryMixin.js";
 
-class CourseCard extends ImaginaryMixin(DDD) {
+class CourseCard extends DDD {
   static get styles() {
     return [
       css`
@@ -118,7 +117,6 @@ class CourseCard extends ImaginaryMixin(DDD) {
     ];
   }
   render() {
-    const imaginaryUrl = this.computeImaginaryUrl(this.image);
     return html`
       <a href="${this.url}">
         <div id="card_wrap">
@@ -126,7 +124,7 @@ class CourseCard extends ImaginaryMixin(DDD) {
             id="course_image"
             role="img"
             aria-label=${this.alt}
-            style=${`background-image:url(${imaginaryUrl})`}
+            style=${`background-image:url(${this.image})`}
           ></div>
           <div id="course_icon">
             <simple-icon-lite icon="${this.icon}"></simple-icon-lite>
@@ -179,14 +177,6 @@ class CourseCard extends ImaginaryMixin(DDD) {
         type: String,
       },
     };
-  }
-  computeImaginaryUrl(image) {
-    const _image = this.imaginaryGenerateUrl(
-      `${image}`,
-      "smartcrop",
-      ["width=450", "height=300", "quality=75", "type=jpeg"],
-    );
-    return _image;
   }
 }
 globalThis.customElements.define(CourseCard.tag, CourseCard);

@@ -3,9 +3,7 @@
  * @license Apache-2.0, see License.md for full text.
  */
 import { html, css } from "lit";
-import { HAXCMSLitElementTheme } from "@haxtheweb/haxcms-elements/lib/core/HAXCMSLitElementTheme.js";
-import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
-import { autorun, toJS } from "mobx";
+import { HAXCMSLitElementTheme, autorun, toJS, store } from "@haxtheweb/haxcms-elements/lib/core/HAXCMSLitElementTheme.js";
 import "@haxtheweb/scroll-button/scroll-button.js";
 import "@haxtheweb/media-image/media-image.js";
 import "@haxtheweb/citation-element/citation-element.js";
@@ -72,25 +70,28 @@ class OdlHaxtheme extends HAXCMSLitElementTheme {
     super();
     this._activeTemplate = "home";
     this.activeItem = null;
-    // Stable conditions object so we don't pass a new reference to
+    // Default slugs excluded from the top menu. These can be overridden
+    // via site.json metadata.theme.variables.excludedMenuSlugs (an array
+    // of slug strings) so the menu is configurable without code changes.
+    this.__defaultExcludedMenuSlugs = [
+      "syllabi",
+      "spotlight",
+      "coursemanagement",
+      "lab",
+      "pedagogy",
+      "multimedia",
+      "contingency",
+      "search",
+      "faqs",
+      "demos"
+    ];
+    // Stable conditions object — rebuilt when manifest loads (see
+    // connectedCallback autorun) so we don't pass a new reference to
     // odl-site-top-menu on every render (which would loop site-query).
-    // Uses "slug" (not "location") because location is the full path
-    // (pages/syllabi/index.html) while the exclusion values are slugs.
     this.__topMenuConditions = {
       parent: null,
       slug: {
-        value: [
-          "syllabi",
-          "spotlight",
-          "coursemanagement",
-          "lab",
-          "pedagogy",
-          "multimedia",
-          "contingency",
-          "search",
-          "faqs",
-          "demos",
-        ],
+        value: [...this.__defaultExcludedMenuSlugs],
         operator: "!=",
       },
     };
@@ -98,16 +99,42 @@ class OdlHaxtheme extends HAXCMSLitElementTheme {
 
   connectedCallback() {
     super.connectedCallback();
+    // Watch the manifest so we can read the excludedMenuSlugs from
+    // site.json metadata.theme.variables and rebuild the menu conditions
+    // when the manifest loads or changes.
+    this.__disposer.push(
+      autorun((reaction) => {
+        const manifest = toJS(store.manifest);
+        const excludedSlugs =
+          manifest &&
+          manifest.metadata &&
+          manifest.metadata.theme &&
+          manifest.metadata.theme.variables &&
+          Array.isArray(manifest.metadata.theme.variables.excludedMenuSlugs)
+            ? manifest.metadata.theme.variables.excludedMenuSlugs
+            : this.__defaultExcludedMenuSlugs;
+        // Only rebuild if the list actually changed (avoid unnecessary renders)
+        const current = this.__topMenuConditions.slug.value;
+        if (
+          current.length !== excludedSlugs.length ||
+          !current.every((s, i) => s === excludedSlugs[i])
+        ) {
+          this.__topMenuConditions = {
+            parent: null,
+            slug: { value: [...excludedSlugs], operator: "!=" },
+          };
+          this.requestUpdate();
+        }
+      }),
+    );
     this.__disposer.push(
       autorun((reaction) => {
         const loc = toJS(store.location);
         const item = toJS(store.activeItem);
-        console.log("[ODL-THEME] autorun fired, loc:", loc && loc.route ? loc.route.name : "null", "item:", item ? item.id : "null");
         Promise.resolve().then(() => {
           this._location = loc;
           this.activeItem = item;
           this._activeTemplate = this._computeTemplate(loc, item);
-          console.log("[ODL-THEME] _activeTemplate set to:", this._activeTemplate);
           if (loc) {
             globalThis.scrollTo(0, 0);
           }
@@ -407,9 +434,7 @@ class OdlHaxtheme extends HAXCMSLitElementTheme {
   render() {
     return html`
       <page-topbar .editMode=${this.editMode} alert></page-topbar>
-      <odl-site-top-menu
-        .conditions=${this.__topMenuConditions}
-      ></odl-site-top-menu>
+      <odl-site-top-menu></odl-site-top-menu>
       ${this._renderActiveTemplate()}
       <scroll-button></scroll-button>
       <page-footer></page-footer>

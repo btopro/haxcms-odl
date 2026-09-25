@@ -2,7 +2,6 @@ import { html, css } from "lit";
 import { DDD } from "@haxtheweb/d-d-d/d-d-d.js";
 import { store } from "@haxtheweb/haxcms-elements/lib/core/haxcms-site-store.js";
 import { autorun, toJS } from "mobx";
-import { ImaginaryMixin } from "./ImaginaryMixin.js";
 import "@haxtheweb/haxcms-elements/lib/ui-components/navigation/site-breadcrumb.js";
 import "@haxtheweb/haxcms-elements/lib/ui-components/blocks/site-recent-content-block.js";
 import "@haxtheweb/video-player/video-player.js";
@@ -10,7 +9,7 @@ import "@haxtheweb/simple-icon/lib/simple-icon-lite.js";
 import "./page-banner.js";
 import "./course-icons.js";
 
-class HaxThemeCourse extends ImaginaryMixin(DDD) {
+class HaxThemeCourse extends DDD {
   static get tag() {
     return "haxtheme-course";
   }

@@ -86,6 +86,15 @@ class InfoBox extends DDD {
           --simple-icon-height: var(--ddd-icon-size-sm, 16px);
           --simple-icon-width: var(--ddd-icon-size-sm, 16px);
         }
+
+        /* Dark mode text color cascades through shadow DOM via
+           --odl-feature-text-color set on body.dark-mode in theme.css */
+        :host {
+          color: var(--odl-feature-text-color, var(--odl-haxtheme-font-color, #000));
+        }
+        h1 {
+          color: var(--odl-feature-text-color, var(--odl-haxtheme-font-color, #000));
+        }
       `,
     ];
   }

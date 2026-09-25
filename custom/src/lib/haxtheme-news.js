@@ -206,6 +206,11 @@ class HaxThemeNews extends DDD {
           </div>
         </div>
       </div>
+      <div id="contentcontainer">
+        <div id="slot">
+          <slot></slot>
+        </div>
+      </div>
     `;
   }
 }

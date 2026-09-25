@@ -388,7 +388,7 @@ class PageFooter extends DDD {
             <a href="http://odl.science.psu.edu">
               <img
                 class="odl-mark-img"
-                alt="Office of Digital Learning, Eberly College of Science"
+                alt="Eberly College of Science"
                 src="files/theme-images/logos/odl-logo.png"
               />
             </a>

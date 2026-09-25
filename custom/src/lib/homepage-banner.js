@@ -184,11 +184,11 @@ class HomePageBanner extends DDD {
           <div class="logo">
             <img
               src="files/theme-images/logos/odl-logo.png"
-              alt="Office of Digital Learning"
+              alt="Eberly College of Science"
             />
           </div>
           <div class="company_name">
-            <h2>Office of Digital Learning</h2>
+            <h2>Eberly College of Science</h2>
           </div>
         </div>
       </div>

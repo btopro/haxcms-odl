@@ -305,6 +305,10 @@ class ContentListing extends DDD {
 
   constructor() {
     super();
+    this.image = "";
+    this.alt = "";
+    this.title = "";
+    this.location = "";
     this.__courseitems = [];
     this.__selectedCourse = null;
     this.__selectedCourses = [];
@@ -363,10 +367,10 @@ class ContentListing extends DDD {
   __filteredCourselist(items) {
     let filterIndex = [];
     const filtered = items.filter((item) => {
-      if (filterIndex.includes(varGet(item, this.slug, false))) {
+      if (filterIndex.includes(varGet(item, this.location, false))) {
         return false;
       } else {
-        filterIndex.push(varGet(item, this.slug, false));
+        filterIndex.push(varGet(item, this.location, false));
         return true;
       }
     });
@@ -377,8 +381,8 @@ class ContentListing extends DDD {
     const filtered = this.__filteredCourselist(items);
     const courses = filtered.map((item) => {
       return {
-        value: varGet(item, this.slug, false),
-        alt: varGet(item, this.slug, false),
+        value: varGet(item, this.location, false),
+        alt: varGet(item, this.location, false),
       };
     });
     return [courses];
@@ -387,7 +391,7 @@ class ContentListing extends DDD {
   __courseItemsDuped(items) {
     const filtered = this.__filteredCourselist(items);
     const subjects = filtered.map((item) =>
-      varGet(item, this.slug, false),
+      varGet(item, this.location, false),
     );
     return subjects;
   }

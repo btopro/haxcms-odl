@@ -142,6 +142,7 @@ class PageFeature extends DDD {
           background-color: var(
             --haxtheme-page-feature-feature-description-wrap-background-color
           );
+          color: var(--odl-feature-text-color, var(--odl-haxtheme-font-color, #000));
           height: var(
             --haxtheme-page-feature-feature-description-wrap-height,
             auto
@@ -186,6 +187,14 @@ class PageFeature extends DDD {
               0
             );
           }
+        }
+
+        /* Dark mode text color is set via --odl-feature-text-color which
+           cascades through shadow DOM from body.dark-mode in theme.css.
+           This is more reliable than :host-context() which lacks
+           Firefox/Safari support. */
+        #description {
+          color: var(--odl-feature-text-color, var(--odl-haxtheme-font-color, #000));
         }
 
         #title_wrap {
